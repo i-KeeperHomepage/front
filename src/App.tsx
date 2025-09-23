@@ -64,7 +64,7 @@ const router = createBrowserRouter([
             element: <PostDetail post={demoPosts[0]} />, // 데모용
           },
         ],
-      }
+      }   
 
     ],
   },
