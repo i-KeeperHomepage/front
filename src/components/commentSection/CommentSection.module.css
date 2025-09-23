@@ -1,0 +1,130 @@
+.comments {
+  margin-top: 40px;
+  color: #000; 
+}
+
+.comments h3{
+  margin-bottom: 1rem;
+  color: #000;
+}
+
+.form {
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 20px;
+  background: #fff; 
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.row input,
+.row textarea {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 14px;
+  background: #fff;  
+  color: #000;       
+}
+
+.row textarea {
+  height: 80px;
+  resize: none;
+}
+
+.row button {
+  padding: 0 16px;
+  background: #fff;    
+  color: #000;        
+  border: 1px solid #d1d5db; 
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.row button:hover {
+  background: #f3f4f6;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list li {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 10px 0;
+  background: #fff; 
+}
+
+.meta {
+  font-size: 12px;
+  color: #4b5563; 
+  margin-bottom: 4px;
+}
+
+.actions {
+  margin-top: 6px;
+  display: flex;
+  gap: 8px;
+}
+
+.actions button {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  background: #fff; 
+  color: #000;     
+  cursor: pointer;
+}
+
+.actions button:hover {
+  background: #f3f4f6;
+}
+
+.editBox {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.editBox textarea {
+  flex: 1;
+  height: 60px;
+  resize: none;
+  padding: 6px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: #fff; 
+  color: #000;     
+  font-size: 14px;
+}
+
+.editBox .buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end; 
+}
+
+.editBox button {
+  padding: 4px 8px;   
+  font-size: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: #fff;
+  color: #000;
+  cursor: pointer;
+  white-space: nowrap;  
+}
+
+.editBox button:hover {
+  background: #f3f4f6;
+}

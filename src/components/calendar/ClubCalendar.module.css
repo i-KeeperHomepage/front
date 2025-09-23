@@ -1,0 +1,121 @@
+.calendarWrap {
+  /*border: 1px solid #e5e7eb; */
+  border-radius: 16px;
+  background: #fff;
+  padding: 12px;
+  overflow: hidden;
+}
+
+/* 툴바 전체를 한 줄로 */
+:global(.fc .fc-toolbar) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; 
+  margin-bottom: 0.75rem;
+}
+
+/* 왼쪽 덩어리 (제목 + prev/next/오늘) */
+:global(.fc .fc-toolbar-chunk:first-child) {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* 제목 */
+:global(.fc .fc-toolbar-title) {
+  font-weight: 700;
+  font-size: 16px;
+  margin: 0;
+  color: #0f172a;
+}
+
+:global(.fc .fc-button) {
+  background: #fff;
+  border: 1px solid #000;
+  color: #000;
+  font-size: 14px;
+  font-weight: 500;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+:global(.fc .fc-button:hover) {
+  background: #000;
+  color: #fff;
+}
+:global(.fc .fc-button:disabled) {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+:global(.fc-prev-button),
+:global(.fc-next-button) {
+  width: 32px;
+  padding: 0;
+}
+
+/* today 버튼 */
+:global(.fc-today-button) {
+  background: #fff;
+  color: #000;
+}
+:global(.fc-today-button:hover) {
+  background: #000;
+  color: #fff;
+}
+
+:global(.fc-button-group .fc-button) {
+  background: #fff;
+  border: 1px solid #000;
+  color: #000;
+}
+:global(.fc-button-group .fc-button:hover) {
+  background: #000;
+  color: #fff;
+}
+:global(.fc-button-group .fc-button.fc-button-active) {
+  background: #000;
+  color: #fff;
+}
+
+/* 요일 헤더 스타일 */
+:global(.fc .fc-col-header-cell) {
+  background: #f8fafc;
+  font-weight: 600;
+  color: #0f172a;
+  padding: 8px 0;
+  border: 1px solid #e5e7eb;
+}
+
+/* 날짜 셀 */
+:global(.fc .fc-daygrid-day) {
+  border-color: #e5e7eb;
+}
+:global(.fc .fc-daygrid-day-number) {
+  font-size: 12px;
+  font-weight: 500;
+  color: #334155;
+  padding: 4px;
+}
+
+/* 오늘 날짜 강조 */
+:global(.fc .fc-day-today) {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* 이벤트 pill 스타일 */
+:global(.fc-event) {
+  background: #000;
+  border: none;
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+}
