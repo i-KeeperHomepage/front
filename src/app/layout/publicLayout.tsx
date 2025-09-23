@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import SiteHeader from "@/components/SiteHeader";
-import styles from "./PublicLayout.module.css";
+import styles from "./publicLayout.module.css";
 import SiteFooter from "@/components/sitefooter/SiteFooter";
 
 export default function PublicLayout() {
