@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import styles from "./PostTable.module.css"; // 테이블 스타일 공통 사용
-import { Post } from "../../app/routes/demoPosts";
+import type { DemoPost } from "../../app/routes/demoPosts";
 
 interface PostTableProps {
-  posts: Post[];                    // 게시글 배열
+  posts: DemoPost[];                    // 게시글 배열
   currentPage: number;              // 현재 페이지 번호
   setCurrentPage: (page: number) => void; // 페이지 변경 함수
   postsPerPage?: number;            // 한 페이지당 게시글 수 (기본값 5)
@@ -32,19 +32,17 @@ export default function PostTable({
       <table className={styles.table}>
         <colgroup>
           <col style={{ width: "12%" }} />
-          <col style={{ width: "48%" }} />
+          <col style={{ width: "58%" }} />
           <col style={{ width: "15%" }} />
           <col style={{ width: "15%" }} />
-          <col style={{ width: "10%" }} />
         </colgroup>
 
         <thead>
           <tr>
             <th>CATEGORY</th>
-            <th>SUBJECT</th>
+            <th>TITLE</th>
             <th>NAME</th>
             <th>DATE</th>
-            <th>HIT</th>
           </tr>
         </thead>
         <tbody>
@@ -52,11 +50,10 @@ export default function PostTable({
             <tr key={post.id}>
               <td>{post.category}</td>
               <td className={styles.subject}>
-                <Link to={`${basePath}/${post.id}`}>{post.subject}</Link>
+                <Link to={`${basePath}/${post.id}`}>{post.title}</Link>
               </td>
-              <td>{post.name}</td>
-              <td>{post.date}</td>
-              <td>{post.hit}</td>
+              <td>{post.author_name}</td>
+              <td>{post.createAt}</td>
             </tr>
           ))}
         </tbody>

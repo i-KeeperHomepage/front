@@ -83,12 +83,6 @@ export default function CommentSection() {
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
           />
-          <input
-            type="password"
-            placeholder="비밀번호"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
         </div>
         <div className={styles.row}>
           <textarea

@@ -17,8 +17,8 @@ const [seminarPage, setSeminarPage] = useState(1);
         currentPage={iKeeperSeminarPage}
         setCurrentPage={setiKeeperSeminarPage}
         postsPerPage={5}
-        basePath="/reference/iKeeperSeminar"
-        title="i-Keeper Seminar"
+        basePath="/reference/KeeperSeminar"
+        title="Keeper Seminar"
       />
 
       <PostTable

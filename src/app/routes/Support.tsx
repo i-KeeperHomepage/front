@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import PostTable from "@/components/postable/PostTable";
-import { demoPosts, Post } from "./demoPosts";
-import styles from "./Support.module.css";
+import { demoPosts } from "./demoPosts";
+import type { DemoPost } from "./demoPosts";
 
 export default function Support() {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<DemoPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -40,7 +40,7 @@ export default function Support() {
         setCurrentPage={setCurrentPage}
         postsPerPage={5}
         basePath="/support"
-        title="1:1 문의"
+        title="문의"
       />
     </section>
   );

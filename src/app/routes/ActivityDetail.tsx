@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import styles from "./ActivityDetail.module.css";
-import { demoPosts, Post } from "./demoPosts";
+import { demoPosts } from "./demoPosts";
+import type { DemoPost } from "./demoPosts";
 import PostDetail from "@/components/postDetail/PostDetail";
 
 export default function ActivityDetail() {
   const { id } = useParams<{ id: string }>();
-  const [post, setPost] = useState<Post | null>(null);
+  const [post, setPost] = useState<DemoPost | null>(null);
 
   useEffect(() => {
     // ✅ 지금은 데모 데이터에서 조회

@@ -1,10 +1,10 @@
 import styles from "./PostDetail.module.css";
-import { Post } from "../../app/routes/demoPosts";
+import type { DemoPost } from "../../app/routes/demoPosts";
 import { useNavigate } from "react-router-dom";
 import CommentSection from "@/components/commentSection/CommentSection";
 
 interface PostDetailProps {
-  post: Post;
+  post: DemoPost;
 }
 
 export default function PostDetail({ post }: PostDetailProps) {
@@ -12,15 +12,15 @@ export default function PostDetail({ post }: PostDetailProps) {
 
   return (
     <section className={`site-container ${styles.detail}`}>
-      <h2 className={styles.title}>{post.subject}</h2>
+      <h2 className={styles.title}>{post.title}</h2>
       <div className={styles.meta}>
-        <span>{post.category}</span> · <span>{post.name}</span> · <span>{post.date}</span> ·{" "}
-        <span>조회 {post.hit}</span>
+        <span>{post.category}</span> · <span>{post.author_name}</span> · <span>{post.createAt}</span> ·{" "}
+        <span>조회</span>
       </div>
 
       {post.image && (
         <div className={styles.imageWrap}>
-          <img src={post.image} alt={post.subject} />
+          <img src={post.image} alt={post.title} />
         </div>
       )}
 
