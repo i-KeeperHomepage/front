@@ -6,7 +6,7 @@ import koLocale from "@fullcalendar/core/locales/ko";
 import styles from "./ClubCalendar.module.css";
 
 export interface ClubCalendarProps {
-  events?: { title: string; start: string; end?: string }[];
+  events?: { title: string; startDate: string; endDate?: string }[];
   initialDate?: string; // "2025-09-01"
 }
 

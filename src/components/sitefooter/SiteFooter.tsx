@@ -15,7 +15,7 @@ export default function SiteFooter() {
         <div className={styles.info}>
           <p>
             ClubName : i-Keeper  &nbsp;&nbsp; Address :
-            경북 경산시 하양읍 하양로 13-13 (대구가톨릭대학교) 공학관 D2-509 &nbsp;&nbsp;
+            경상북도 경산시 하양읍 하양로 13-13 대구가톨릭대학교 공학관 D2-509 &nbsp;&nbsp;
           </p>
         </div>
 

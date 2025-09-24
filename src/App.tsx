@@ -37,9 +37,9 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <Reference /> },
 
-          // i-Keeper세미나 상세
+          // Keeper세미나 상세
           {
-            path: "iKeeperSeminar/:id",
+            path: "KeeperSeminar/:id",
             element: <PostDetail post={demoPosts[0]} />, // ← 데모 데이터 (나중에 fetch로 교체)
           },
           // 정보공유세미나 상세
