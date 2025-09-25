@@ -26,16 +26,29 @@ export default function PostForm({
     e.preventDefault();
 
     const newPost = {
+      id: Date.now(), // 로컬에서는 timestamp로 ID 생
       category,
       title,
       author_name: author,
       content,
-      createAt: new Date().toISOString(),
+      createAt: new Date().toISOString().split("T")[0],
     };
+    
+    // 데모: navigate로 전달
+    if (window.confirm("저장하시겠습니까?")) {
+      navigate(basePath, { state: { newPost } });
+    }
 
-    console.log("작성된 게시글:", newPost);
+    // // confirm으로 작성 확인
+    // const confirmed = window.confirm("게시글을 저장하시겠습니까?");
+    // if (!confirmed) return;
 
-    // ✅ 나중에 백엔드 연동
+    // // 지금은 localStorage에 저장
+    // const savedPosts = JSON.parse(localStorage.getItem(basePath) || "[]");
+    // localStorage.setItem(basePath, JSON.stringify([newPost, ...savedPosts]));
+
+
+    // 나중에 백엔드 연동
     /*
     try {
       const res = await fetch(apiEndpoint, {
@@ -44,12 +57,16 @@ export default function PostForm({
         body: JSON.stringify(newPost),
       });
       if (!res.ok) throw new Error("게시글 등록 실패");
-      navigate(basePath); // 작성 후 목록으로 이동
+
+      alert("게시글이 저장되었습니다.");
+      navigate(basePath);
     } catch (err) {
       console.error(err);
+      alert("게시글 저장 중 오류가 발생했습니다.");
     }
     */
   };
+
 
   return (
     <section className={`site-container ${styles.formWrap}`}>

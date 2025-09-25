@@ -60,6 +60,8 @@ export default function SiteHeader() {
               <ul className={styles.submenu}>
                 <li><NavLink to="/library">Library</NavLink></li>
                 <li><NavLink to="/cleaning">Cleaning</NavLink></li>
+                <li><NavLink to="/fee">Fee</NavLink></li>
+                <li><NavLink to="/support">Support</NavLink></li>
               </ul>
             </li>
           </ul>

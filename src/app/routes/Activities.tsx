@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { demoPosts } from "./demoPosts";
 import type { DemoPost } from "./demoPosts";
 import PostTable from "@/components/postable/PostTable";
@@ -11,10 +12,13 @@ export default function Activities() {
   // 페이지네이션 상태
   const [currentPage, setCurrentPage] = useState(1);
 
+  const location = useLocation();
+
   useEffect(() => {
     // 지금은 데모 데이터 사용
     setPosts(demoPosts);
     setLoading(false);
+    }, []);
 
     // 나중에 백엔드 연결시 주석 해제
     /*
@@ -42,8 +46,15 @@ export default function Activities() {
       }
     }
     fetchPosts();
-    */
-  }, [currentPage]);
+    
+  }, [currentPage]);*/
+
+  // 새 글이 추가된 경우 반영
+  useEffect(() => {
+    if (location.state?.newPost) {
+      setPosts((prev) => [location.state.newPost, ...prev]);
+    }
+  }, [location.state]);
 
   if (loading) return <p>불러오는 중...</p>;
 
