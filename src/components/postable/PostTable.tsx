@@ -1,14 +1,17 @@
 import { Link } from "react-router-dom";
 import styles from "./PostTable.module.css"; // 테이블 스타일 공통 사용
 import type { DemoPost } from "../../app/routes/demoPosts";
+import { FaPen } from "react-icons/fa";
+import { FaAnglesLeft, FaAnglesRight } from "react-icons/fa6";
 
 interface PostTableProps {
   posts: DemoPost[];                    // 게시글 배열
   currentPage: number;              // 현재 페이지 번호
   setCurrentPage: (page: number) => void; // 페이지 변경 함수
   postsPerPage?: number;            // 한 페이지당 게시글 수 (기본값 5)
-  basePath?: string;                // 상세 페이지 이동 기본 경로 (예: "/activities")
-  title?: string; 
+  basePath?: string;                // 상세 페이지 이동 기본 경로 
+  title?: string;
+  showWriteButton?: boolean;
 }
 
 export default function PostTable({
@@ -17,7 +20,8 @@ export default function PostTable({
   setCurrentPage,
   postsPerPage = 5,
   basePath = "/activities",
-  title= "게시판",
+  title = "게시판",
+  showWriteButton = true,
 }: PostTableProps) {
   const indexOfLast = currentPage * postsPerPage;
   const indexOfFirst = indexOfLast - postsPerPage;
@@ -26,9 +30,17 @@ export default function PostTable({
 
   return (
     <div className={styles.wrapper}>
-      {/* ✅ 제목 */}
-      <h2 className={styles.title}>{title}</h2>
+      <div className={styles.headerRow}>
+        {/* 제목 & 작성 버튼 */}
+        <h2 className={styles.title}>{title}</h2>
+        {showWriteButton && (
+          <Link to={`${basePath}/write`} className={styles.writeBtn}>
+            <FaPen />
+          </Link>
+        )}
+      </div>
 
+      {/* 게시글 */}
       <table className={styles.table}>
         <colgroup>
           <col style={{ width: "12%" }} />
@@ -59,13 +71,13 @@ export default function PostTable({
         </tbody>
       </table>
 
-      {/* ✅ 페이지네이션 */}
+      {/* 페이지네이션 */}
       <div className={styles.pagination}>
         <button
           onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
           disabled={currentPage === 1}
         >
-          «
+          <FaAnglesLeft />
         </button>
         {Array.from({ length: totalPages }, (_, i) => (
           <button
@@ -80,7 +92,7 @@ export default function PostTable({
           onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
           disabled={currentPage === totalPages}
         >
-          »
+          <FaAnglesRight />
         </button>
       </div>
     </div>

@@ -11,6 +11,11 @@ export interface ClubCalendarProps {
 }
 
 export default function ClubCalendar({ events = [], initialDate }: ClubCalendarProps) {
+  const mappedEvents = events.map((e) => ({
+    title: e.title,
+    start: e.startDate,
+    end: e.endDate,
+  }));
   return (
     <div className={styles.calendarWrap}>
       <FullCalendar
@@ -27,7 +32,7 @@ export default function ClubCalendar({ events = [], initialDate }: ClubCalendarP
         firstDay={0}
         dayHeaderFormat={{ weekday: 'short' }}
         initialDate={initialDate}
-        events={events}
+        events={mappedEvents}
         dateClick={(info) => console.log("dateClick:", info.dateStr)}
         eventClick={(info) => console.log("eventClick:", info.event)}
       />

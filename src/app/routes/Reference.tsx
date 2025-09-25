@@ -1,17 +1,15 @@
 import { useState } from "react";
-import styles from "./Activities.module.css";
 import PostTable from "@/components/postable/PostTable";
 import { demoPosts } from "./demoPosts";
+import { Outlet } from "react-router-dom";
 
-export default function Activities() {
-const [seminarPage, setSeminarPage] = useState(1);
+export default function Reference() {
+  const [seminarPage, setSeminarPage] = useState(1);
   const [specialPage, setSpecialPage] = useState(1);
   const [iKeeperSeminarPage, setiKeeperSeminarPage] = useState(1);
 
   return (
-    <section className={`site-container ${styles.activities}`}>
-
-      {/* ✅ PostTable 사용 */}
+    <section>
       <PostTable
         posts={demoPosts}
         currentPage={iKeeperSeminarPage}
@@ -19,6 +17,7 @@ const [seminarPage, setSeminarPage] = useState(1);
         postsPerPage={5}
         basePath="/reference/KeeperSeminar"
         title="Keeper Seminar"
+        showWriteButton = {true}
       />
 
       <PostTable
@@ -27,7 +26,8 @@ const [seminarPage, setSeminarPage] = useState(1);
         setCurrentPage={setSeminarPage}
         postsPerPage={5}
         basePath="/reference/seminar"
-        title="정보공유세미나"
+        title="Info Sharing Seminar"
+        showWriteButton = {true}
       />
 
       <PostTable
@@ -36,8 +36,10 @@ const [seminarPage, setSeminarPage] = useState(1);
         setCurrentPage={setSpecialPage}
         postsPerPage={5}
         basePath="/reference/special"
-        title="특강"
+        title="Special Lecture"
+        showWriteButton = {true}
       />
+      <Outlet />
     </section>
   );
 }

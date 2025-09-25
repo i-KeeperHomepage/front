@@ -4,10 +4,11 @@ import styles from "./SiteHeader.module.css";
 
 const nav = [
   { to: "/about", label: "About" },
-  { to: "/activities", label: "Activities" },
+  { to: "/notice", label: "Notice" },
   { to: "/reference", label: "Reference" },
-  { to: "/support", label: "Support" },
+  { to: "/activities", label: "Activities" },
   { to: "/gallery", label: "Gallery" },
+  { to: "/support", label: "Support" },
 ];
 
 export default function SiteHeader() {
@@ -28,20 +29,41 @@ export default function SiteHeader() {
             </Link>
           </div>
 
-          {/* 네비게이션 (데스크톱 전용) */}
-          <nav className={styles.nav}>
-            {nav.map(({ to, label }) => (
-              <NavLink
-                key={to}
-                to={to}
-                className={({ isActive }) =>
-                  `${styles.navLink} ${isActive ? styles.active : ""}`
-                }
-              >
-                {label}
-              </NavLink>
-            ))}
-          </nav>
+          {/* 네비게이션 */}
+        <nav className={styles.nav}>
+          <ul className={styles.menu}>
+            {/* i-Keeper */}
+            <li className={styles.dropdown}>
+              <span className={styles.dropdown_container}>i-Keeper</span>
+              <ul className={styles.submenu}>
+                <li><NavLink to="/about">About</NavLink></li>
+                <li><NavLink to="/rule">Rule</NavLink></li>
+              </ul>
+            </li>
+
+            {/* Notice */}
+            <li className={styles.dropdown_container}><NavLink to="/notice">Notice</NavLink></li>
+
+            {/* Activity */}
+            <li className={styles.dropdown}>
+              <span className={styles.dropdown_container}>Activity</span>
+              <ul className={styles.submenu}>
+                <li><NavLink to="/gallery">Gallery</NavLink></li>
+                <li><NavLink to="/activities">TeamBuilding</NavLink></li>
+                <li><NavLink to="/reference">Seminar</NavLink></li>
+              </ul>
+            </li>
+
+            {/* ETC */}
+            <li className={styles.dropdown}>
+              <span className={styles.dropdown_container}>ETC</span>
+              <ul className={styles.submenu}>
+                <li><NavLink to="/library">Library</NavLink></li>
+                <li><NavLink to="/cleaning">Cleaning</NavLink></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
 
           {/* 로그인/가입 (데스크톱 전용) */}
           <div className={styles.authLinks}>

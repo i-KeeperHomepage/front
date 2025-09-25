@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import PostTable from "@/components/postable/PostTable";
 import { demoPosts } from "./demoPosts";
 import type { DemoPost } from "./demoPosts";
+import { Outlet } from "react-router-dom";
 
 export default function Support() {
   const [posts, setPosts] = useState<DemoPost[]>([]);
@@ -21,7 +22,7 @@ export default function Support() {
         const data = await res.json();
         setPosts(data);
       } catch (err) {
-        console.error("1대1 문의 게시판 불러오기 실패:", err);
+        console.error("1대1 Inquiry 게시판 불러오기 실패:", err);
       } finally {
         setLoading(false);
       }
@@ -33,15 +34,17 @@ export default function Support() {
   if (loading) return <p>불러오는 중...</p>;
 
   return (
-    <section className="site-container">
+    <section>
       <PostTable
         posts={posts}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         postsPerPage={5}
         basePath="/support"
-        title="문의"
+        title="Inquiry"
+        showWriteButton = {true}
       />
+      <Outlet />
     </section>
   );
 }
