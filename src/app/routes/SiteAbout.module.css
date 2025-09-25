@@ -73,18 +73,6 @@
   align-items: flex-start;  
 }
 
-.mapWrap {
-  flex: 2;
-  min-width: 300px;
-}
-
-.map {
-  width: 100%;
-  height: 320px;
-  border-radius: 12px;
-  background-color: #0f0;
-}
-
 .address {
   flex: 1;
   min-width: 200px;

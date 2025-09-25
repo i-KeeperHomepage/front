@@ -28,7 +28,6 @@ export default function PostDetail({ post }: PostDetailProps) {
         <p>{post.content}</p>
       </div>
 
-      {/* ✅ 댓글 영역 */}
       <CommentSection />
 
       <div className={styles.actions}>

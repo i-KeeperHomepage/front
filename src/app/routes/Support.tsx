@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import PostTable from "@/components/postable/PostTable";
 import { demoPosts } from "./demoPosts";
 import type { DemoPost } from "./demoPosts";
@@ -9,12 +10,14 @@ export default function Support() {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const location = useLocation();
+
   useEffect(() => {
-    // ✅ 지금은 데모 데이터 사용
+    // 지금은 데모 데이터 사용
     setPosts(demoPosts);
     setLoading(false);
 
-    // ✅ 나중에 백엔드 연결시 주석 해제
+    // 나중에 백엔드 연결시 주석 해제
     /*
     async function fetchPosts() {
       try {
@@ -31,6 +34,12 @@ export default function Support() {
     */
   }, []);
 
+  useEffect(() => {
+    if (location.state?.newPost) {
+      setPosts((prev) => [location.state.newPost, ...prev]);
+    }
+  }, [location.state]);
+
   if (loading) return <p>불러오는 중...</p>;
 
   return (
@@ -42,7 +51,7 @@ export default function Support() {
         postsPerPage={5}
         basePath="/support"
         title="Inquiry"
-        showWriteButton = {true}
+        showWriteButton={true}
       />
       <Outlet />
     </section>

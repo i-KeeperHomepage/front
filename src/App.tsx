@@ -4,6 +4,7 @@ import PublicLayout from "@/app/layout/publicLayout";
 // 페이지 import
 import SiteHome from "@/app/routes/SiteHome";
 import SiteAbout from "@/app/routes/SiteAbout";
+import Rule from "@/app/routes/Rule";
 
 import Activities from "@/app/routes/Activities";
 import ActivityDetail from "@/app/routes/ActivityDetail";
@@ -19,6 +20,10 @@ import Gallery from "@/app/routes/Gallery";
 import Support from "@/app/routes/Support";
 import SupportDetail from "@/app/routes/SupportDetail";
 
+import Library from "@/app/routes/Library";
+import Fee from "@/app/routes/Fee";
+import Cleaning from "@/app/routes/Cleaning";
+
 import PostForm from "@/components/postForm/PostForm";
 
 const router = createBrowserRouter([
@@ -28,6 +33,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <SiteHome /> },
       { path: "about", element: <SiteAbout /> },
+      { path: "rule", element: <Rule /> },
 
       // Notice
       {
@@ -132,6 +138,9 @@ const router = createBrowserRouter([
         ),
       },
       { path: "support/:id", element: <SupportDetail /> },
+      { path: "library", element: <Library /> },
+      { path: "fee", element: <Fee /> },
+      { path: "cleaning", element: <Cleaning /> },
     ],
   },
 ]);

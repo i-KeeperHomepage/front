@@ -1,0 +1,60 @@
+.rulePage {
+  padding: 40px 0;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.intro {
+  text-align: center;
+  color: #475569;
+  margin-bottom: 24px;
+}
+
+.accordion {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.accordionHeader {
+  width: 100%;
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  background: #f9fafb;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accordionHeader:hover {
+  background: #f3f4f6;
+}
+
+.icon {
+  font-size: 18px;
+}
+
+.accordionBody {
+  padding: 16px;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.6;
+}
+
+.accordionBody h4 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 12px 0 4px;
+}

@@ -1,13 +1,12 @@
-import { useEffect, useRef } from "react";
+import KakaoMap from "@/components/map/KakaoMap";
 import styles from "./SiteAbout.module.css";
 
 export default function SiteAbout() {
-  const mapElement = useRef<HTMLDivElement>(null);
   const members = [
     {
       name: "너구리",
       info: "(3학년, 컴퓨터공학전공)",
-      desc: <>출석을 왜함 어차피 교수가 출석가지고 뭐라 안함, 네?<br />그랬구나 또 말을 듣고싶었구나<br />지금 수업을 듣는다고 지금의 저보다 많이 벌까요?(현재 재산: 1조 4040억원)</>,
+      desc: <>출석을 왜함 어차피 교수가 출석가지고 뭐라 안함, 네?<br />그랬구나 또 말을 듣고싶었구나<br />지금 수업을 듣는다고 지금의 저보다 많이 벌까요?(현재 재산: 1조 4040억원)<br/>어이가 없다에요</>,
 
       img: "/img/racoon.png",
     },
@@ -24,28 +23,6 @@ export default function SiteAbout() {
       img: "/img/member3.jpg",
     },
   ];
-
-  useEffect(() => {
-  if (!(window as any).kakao || !(window as any).kakao.maps) return;
-
-  (window as any).kakao.maps.load(() => {
-    if (!mapElement.current) return;
-
-    const lat = 35.9135;
-    const lng = 128.8091;
-
-    const map = new (window as any).kakao.maps.Map(mapElement.current, {
-      center: new (window as any).kakao.maps.LatLng(lat, lng),
-      level: 3,
-    });
-
-    const marker = new (window as any).kakao.maps.Marker({
-      position: new (window as any).kakao.maps.LatLng(lat, lng),
-    });
-    marker.setMap(map);
-  });
-}, []);
-
 
   return (
     <section className={`site-container ${styles.about}`}>
@@ -75,13 +52,11 @@ export default function SiteAbout() {
 
       {/* 지도 + 위치 */}
       <div className={styles.mapSection}>
-        <div className={styles.mapWrap}>
-          <div ref={mapElement} id="map" className={styles.map}></div>
-        </div>
+        <KakaoMap lat={35.9135} lng={128.8091} level={3} />
         <div className={styles.address}>
           <h4>i-Keeper</h4>
           <p>경북 경산시 하양읍 하양로 13-13</p>
-          <p>(대구가톨릭대학교) 공학관 D2-509</p>
+          <p>대구가톨릭대학교 공학관 D2-509</p>
           <p>.</p><br />
           <p>.</p><br />
           <p>.</p><br />

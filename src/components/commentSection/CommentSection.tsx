@@ -6,68 +6,81 @@ interface Comment {
   author: string;
   content: string;
   date: string;
-  password: string; // ✅ 비밀번호 저장
 }
 
 export default function CommentSection() {
   const [comments, setComments] = useState<Comment[]>([]);
   const [author, setAuthor] = useState("");
-  const [password, setPassword] = useState("");
   const [content, setContent] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editContent, setEditContent] = useState("");
 
-  // ✅ 댓글 등록
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!author || !content || !password) return;
+    if (!author || !content) return;
 
     const newComment: Comment = {
-      id: comments.length + 1,
+      id: comments.length + 1, // 백엔드에서는 DB에서 자동 생성
       author,
       content,
       date: new Date().toLocaleString(),
-      password,
     };
 
+    // ✅ 지금은 로컬 상태만 업데이트
     setComments([newComment, ...comments]);
+
+    // ✅ 나중에 백엔드 연결할 때는 fetch 사용
+    /*
+    try {
+      const res = await fetch("/api/comments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newComment),
+      });
+      if (!res.ok) throw new Error("댓글 등록 실패");
+      const saved = await res.json();
+      setComments([saved, ...comments]);
+    } catch (err) {
+      console.error(err);
+    }
+    */
+
     setAuthor("");
-    setPassword("");
     setContent("");
   };
 
-  // ✅ 댓글 삭제
   const handleDelete = (id: number) => {
-    const pw = prompt("비밀번호를 입력하세요:");
-    const target = comments.find((c) => c.id === id);
-    if (target && pw === target.password) {
-      setComments(comments.filter((c) => c.id !== id));
-    } else {
-      alert("비밀번호가 올바르지 않습니다.");
-    }
+    // ✅ 로컬에서는 그냥 삭제
+    setComments(comments.filter((c) => c.id !== id));
+
+    // ✅ 백엔드 연결시
+    /*
+    await fetch(`/api/comments/${id}`, { method: "DELETE" });
+    */
   };
 
-  // ✅ 댓글 수정 시작
   const handleEditStart = (id: number, oldContent: string) => {
     setEditingId(id);
     setEditContent(oldContent);
   };
 
-  // ✅ 댓글 수정 완료
   const handleEditSave = (id: number) => {
-    const pw = prompt("비밀번호를 입력하세요:");
-    const target = comments.find((c) => c.id === id);
-    if (target && pw === target.password) {
-      setComments(
-        comments.map((c) =>
-          c.id === id ? { ...c, content: editContent } : c
-        )
-      );
-      setEditingId(null);
-      setEditContent("");
-    } else {
-      alert("비밀번호가 올바르지 않습니다.");
-    }
+    setComments(
+      comments.map((c) =>
+        c.id === id ? { ...c, content: editContent } : c
+      )
+    );
+    setEditingId(null);
+    setEditContent("");
+
+    // ✅ 백엔드 연결시
+    /*
+    await fetch(`/api/comments/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content: editContent }),
+    });
+    */
   };
 
   return (
@@ -127,7 +140,6 @@ export default function CommentSection() {
           </li>
         ))}
       </ul>
-
     </div>
   );
 }
