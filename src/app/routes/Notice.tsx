@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { demoPosts } from "./demoPosts";
 import type { DemoPost } from "./demoPosts";
-import PostTable from "@/components/postable/PostTable";
+import PostTable from "@/components/postable/PostTable"; 
 import { Outlet } from "react-router-dom";
 
 export default function Activities() {
@@ -54,11 +54,11 @@ export default function Activities() {
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         postsPerPage={5}
-        basePath="/activities"
-        title="Team Buliding"
-        showWriteButton={true}
+        basePath="/notice"
+        title="Notice"
+        showWriteButton = {false}
       />
-      <Outlet />
+      <Outlet/>
     </section>
   );
 }

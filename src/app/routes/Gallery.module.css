@@ -1,0 +1,8 @@
+.subject{
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  font-weight: 600;
+  grid-column: 1 / -1;  
+  margin-top: 1rem;
+}

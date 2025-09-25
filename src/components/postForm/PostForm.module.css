@@ -1,0 +1,67 @@
+.formWrap {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #fff; 
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.row label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.row input,
+.row select,
+.row textarea {
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #fff;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.actions button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.actions button[type="submit"] {
+  background: #000;
+  color: #fff;
+}
+
+.actions button[type="button"] {
+  background: #f3f4f6;
+}

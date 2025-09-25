@@ -1,6 +1,8 @@
+import { useEffect, useRef } from "react";
 import styles from "./SiteAbout.module.css";
 
 export default function SiteAbout() {
+  const mapElement = useRef<HTMLDivElement>(null);
   const members = [
     {
       name: "너구리",
@@ -21,8 +23,29 @@ export default function SiteAbout() {
       desc: "설명글이 들어갑니다. 동아리에서의 역할과 주요 활동 내용...",
       img: "/img/member3.jpg",
     },
-    // ...필요한 만큼 추가
   ];
+
+  useEffect(() => {
+  if (!(window as any).kakao || !(window as any).kakao.maps) return;
+
+  (window as any).kakao.maps.load(() => {
+    if (!mapElement.current) return;
+
+    const lat = 35.9135;
+    const lng = 128.8091;
+
+    const map = new (window as any).kakao.maps.Map(mapElement.current, {
+      center: new (window as any).kakao.maps.LatLng(lat, lng),
+      level: 3,
+    });
+
+    const marker = new (window as any).kakao.maps.Marker({
+      position: new (window as any).kakao.maps.LatLng(lat, lng),
+    });
+    marker.setMap(map);
+  });
+}, []);
+
 
   return (
     <section className={`site-container ${styles.about}`}>
@@ -53,13 +76,7 @@ export default function SiteAbout() {
       {/* 지도 + 위치 */}
       <div className={styles.mapSection}>
         <div className={styles.mapWrap}>
-          <iframe
-            src="https://map.naver.com/v5/"
-            style={{ border: 0 }}
-            allowFullScreen
-            loading="lazy"
-            className={styles.map}
-          />
+          <div ref={mapElement} id="map" className={styles.map}></div>
         </div>
         <div className={styles.address}>
           <h4>i-Keeper</h4>

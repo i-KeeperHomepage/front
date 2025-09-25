@@ -3,15 +3,23 @@ import PublicLayout from "@/app/layout/publicLayout";
 
 // 페이지 import
 import SiteHome from "@/app/routes/SiteHome";
-import SiteAbout from "./app/routes/SiteAbout";
-import Activities from "./app/routes/Activities";
-import ActivityDetail from "@/app/routes/ActivityDetail";
-import Reference from "@/app/routes/Reference";
-import PostDetail from "@/components/postDetail/PostDetail";
+import SiteAbout from "@/app/routes/SiteAbout";
 
-import { demoPosts } from "@/app/routes/demoPosts";
-import Support from "./app/routes/Support";
-// import Login from "@/app/routes/Login";
+import Activities from "@/app/routes/Activities";
+import ActivityDetail from "@/app/routes/ActivityDetail";
+
+import Reference from "@/app/routes/Reference";
+import ReferenceDetail from "@/app/routes/ReferenceDetail";
+
+import Notice from "@/app/routes/Notice";
+import NoticeDetail from "@/app/routes/NoticeDetail";
+
+import Gallery from "@/app/routes/Gallery";
+
+import Support from "@/app/routes/Support";
+import SupportDetail from "@/app/routes/SupportDetail";
+
+import PostForm from "@/components/postForm/PostForm";
 
 const router = createBrowserRouter([
   {
@@ -20,52 +28,110 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <SiteHome /> },
       { path: "about", element: <SiteAbout /> },
+
+      // Notice
+      {
+        path: "notice",
+        element: <Notice />,
+      },
+      {
+        path: "notice/write",
+        element: (
+          <PostForm
+            categoryOptions={["공지"]}
+            basePath="/notice"
+            apiEndpoint="/api/posts"
+          />
+        ),
+      },
+      {
+        path: "notice/:id",
+        element: <NoticeDetail />,
+      },
+
       // Activities
       {
         path: "activities",
-        children: [
-          { index: true, element: <Activities /> },
-          {
-            path: ":id",
-            element: <ActivityDetail />,
-          },
-        ],
+        element: <Activities />,
       },
+      {
+        path: "activities/write",
+        element: (
+          <PostForm
+            categoryOptions={["팀빌딩"]}
+            basePath="/activities"
+            apiEndpoint="/api/posts"
+          />
+        ),
+      },
+      {
+        path: "activities/:id",
+        element: <ActivityDetail />,
+      },
+
       // Reference (3개 게시판)
       {
         path: "reference",
-        children: [
-          { index: true, element: <Reference /> },
-
-          // Keeper세미나 상세
-          {
-            path: "KeeperSeminar/:id",
-            element: <PostDetail post={demoPosts[0]} />, // ← 데모 데이터 (나중에 fetch로 교체)
-          },
-          // 정보공유세미나 상세
-          {
-            path: "seminar/:id",
-            element: <PostDetail post={demoPosts[2]} />,
-          },
-          // 특강 상세
-          {
-            path: "special/:id",
-            element: <PostDetail post={demoPosts[1]} />,
-          },
-
-        ],
+        element: <Reference />,
       },
       {
-        path: "support",
-        children: [
-          { index: true, element: <Support /> },
-          {
-            path: ":id",
-            element: <PostDetail post={demoPosts[0]} />, // 데모용
-          },
-        ],
-      }   
+        path: "reference/KeeperSeminar/write",
+        element: (
+          <PostForm
+            categoryOptions={["Keeper 세미나"]}
+            basePath="/reference/"
+            apiEndpoint="/api/posts"
+          />
+        ),
+      }, {
+        path: "reference/KeeperSeminar/:id",
+        element: <ReferenceDetail />,
+      },
+      {
+        path: "reference/seminar/write",
+        element: (
+          <PostForm
+            categoryOptions={["Info Sharing Seminar"]}
+            basePath="/reference/"
+            apiEndpoint="/api/posts"
+          />
+        ),
+      }, { path: "reference/seminar/:id", element: <ReferenceDetail /> },
+      {
+        path: "reference/special/write",
+        element: (
+          <PostForm
+            categoryOptions={["Special Lecture"]}
+            basePath="/reference/"
+            apiEndpoint="/api/posts"
+          />
+        ),
+      },
 
+      { path: "reference/special/:id", element: <ReferenceDetail /> },
+
+      //gallery
+      {
+        path: "gallery",
+        element: <Gallery />,
+      },
+
+      // Support
+      {
+        path: "support",
+        element: <Support />,
+      },
+      {
+        path: "support/write",
+        element: (
+          <PostForm
+            categoryOptions={["Inquiry"]}
+            basePath="/support"
+            apiEndpoint="/api/posts"
+          />
+        ),
+      },
+      { path: "support/:id", element: <SupportDetail /> },
     ],
   },
 ]);
