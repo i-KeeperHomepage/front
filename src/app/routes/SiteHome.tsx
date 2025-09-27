@@ -17,11 +17,11 @@ export default function SiteHome() {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    // ✅ 데모 데이터 사용
+    // 데모 데이터 사용
     setPosts(demoPosts);
     setLoading(false);
 
-    // ✅ 나중에 백엔드 연결
+    // 나중에 백엔드 연결
     /*
     async function fetchNotice() {
       try {

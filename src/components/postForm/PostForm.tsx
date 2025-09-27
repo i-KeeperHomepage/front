@@ -21,6 +21,7 @@ export default function PostForm({
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [content, setContent] = useState("");
+  const [file, setFile] = useState<File | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,6 +33,8 @@ export default function PostForm({
       author_name: author,
       content,
       createAt: new Date().toISOString().split("T")[0],
+      file: file ? URL.createObjectURL(file) : undefined, // demo 용 (실제는 서버 업로드 필요)
+      fileName: file?.name,
     };
     
     // 데모: navigate로 전달
@@ -66,7 +69,6 @@ export default function PostForm({
     }
     */
   };
-
 
   return (
     <section className={`site-container ${styles.formWrap}`}>
@@ -118,6 +120,28 @@ export default function PostForm({
             onChange={(e) => setContent(e.target.value)}
             required
           />
+        </div>
+
+        {/* 파일 업로드 */}
+        <div className={styles.row}>
+          <label>첨부파일</label>
+          <input
+            type="file"
+            onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
+            accept="*"
+          />
+
+          {/* 🔹 여러 개 파일 버전 */}
+          {/*
+          <input
+            type="file"
+            multiple
+            onChange={(e) =>
+              setFiles(e.target.files ? Array.from(e.target.files) : [])
+            }
+            accept="*"
+          />
+          */}
         </div>
 
         {/* 버튼 */}

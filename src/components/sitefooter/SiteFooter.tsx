@@ -7,12 +7,10 @@ export default function SiteFooter() {
         {/* 왼쪽: 네비 + 정보 */}
         <div className={styles.left}>
           <nav className={styles.nav}>
-            <a href="/about">About</a>
+            <a href="/about">i-Keeper</a>
             <a href="/notice">Notice</a>
-            <a href="/reference">Reference</a>
-            <a href="/activities">Activities</a>
-            <a href="/gallery">Gallery</a>
-            <a href="/support">Support</a>
+            <a href="/reference">Activity</a>
+            <a href="/library">ETC</a>
           </nav>
 
           <div className={styles.info}>

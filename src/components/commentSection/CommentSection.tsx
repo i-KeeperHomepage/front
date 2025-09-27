@@ -26,10 +26,10 @@ export default function CommentSection() {
       date: new Date().toLocaleString(),
     };
 
-    // ✅ 지금은 로컬 상태만 업데이트
+    // 지금은 로컬 상태만 업데이트
     setComments([newComment, ...comments]);
 
-    // ✅ 나중에 백엔드 연결할 때는 fetch 사용
+    // 나중에 백엔드 연결할 때는 fetch 사용
     /*
     try {
       const res = await fetch("/api/comments", {
@@ -50,10 +50,10 @@ export default function CommentSection() {
   };
 
   const handleDelete = (id: number) => {
-    // ✅ 로컬에서는 그냥 삭제
+    // 로컬에서는 그냥 삭제
     setComments(comments.filter((c) => c.id !== id));
 
-    // ✅ 백엔드 연결시
+    // 백엔드 연결시
     /*
     await fetch(`/api/comments/${id}`, { method: "DELETE" });
     */
@@ -73,7 +73,7 @@ export default function CommentSection() {
     setEditingId(null);
     setEditContent("");
 
-    // ✅ 백엔드 연결시
+    // 백엔드 연결시
     /*
     await fetch(`/api/comments/${id}`, {
       method: "PUT",

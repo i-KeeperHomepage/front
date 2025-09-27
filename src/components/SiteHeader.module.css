@@ -1,217 +1,216 @@
 .siteHeader {
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
   position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
   z-index: 50;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid #e5e7eb;
 }
 
 .site_container {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 16px;
-  height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.logoWrap {
-  display: flex;
-  align-items: center;
+.logoWrap img {
+  height: 40px;
 }
 
-.logoImg {
-  height: 36px;
-  cursor: pointer;
-}
-
-/* 네비게이션: 기본 숨김 */
-.nav,
-.authLinks {
+.nav {
   display: none;
 }
 
-@media (min-width: 768px) {
-  .nav {
-    display: flex;
-    align-items: center;
-  }
+.menu {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+}
 
-  .menu {
-    display: flex;
-    gap: 24px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
+.dropdown {
+  position: relative;
+}
 
-  .dropdown {
-    position: relative;
-  }
+.dropdown_container {
+  cursor: pointer;
+  font-weight: 600;
+}
 
-  .dropdown_container {
-    cursor: pointer;
-    color: #000;
-    font-weight: 700;
-    padding: 0 1rem;
-  }
-
-  .dropdown_container:hover{
-    color: rgba(63, 63, 63, 0.7);
-  }
-
-  /* 드롭다운 서브메뉴 */
-  .submenu {
-    display: none;
+.submenu {
+  display: none;
   position: absolute;
   top: 100%;
-  left: 50%; 
-  transform: translateX(-50%); 
+  left: 50%;
+  transform: translateX(-50%);
   background: #fff;
   border: 1px solid #e5e7eb;
-  border-radius: 6px;
   list-style: none;
-  padding: 8px 0;
-  z-index: 100;
+  min-width: 120px;
+  text-align: center;
+}
 
-  width: max-content; 
-  min-width: unset; 
-  text-align: center;  
-  }
+.submenu li {
+  margin: 6px 0;
+}
 
-  .submenu li {
-    padding: 6px 12px;
-    white-space: nowrap;
-  }
+.dropdown:hover .submenu {
+  display: block;
+}
 
-  .submenu li a {
-    color: #000;
-    text-decoration: none;
-    font-size: 14px;
-    display: block;
-  padding: 4px 10px;
-  }
+/* 로그인/가입 (데스크톱) */
+.authLinks {
+  display: none;
+  gap: 12px;
+}
 
-  .submenu li a:hover {
-    font-weight: 600;
-  }
-
-  .dropdown:hover .submenu {
-    display: block;
-  }
-
-  /* 로그인/가입 */
-  .authLinks {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    font-size: 12px;
-  }
-
-  .authLink {
-    color: #000;
-    text-decoration: none;
-  }
-
-  .authLink:hover {
-    opacity: 0.7;
-  }
+.authLink {
+  font-size: 14px;
 }
 
 /* 모바일 햄버거 버튼 */
 .mobileMenuBtn {
-  display: block;
+  font-size: 20px;
   background: none;
   border: none;
-  font-size: 1.5rem;
   cursor: pointer;
-  color: #000;
-}
-
-@media (min-width: 768px) {
-  .mobileMenuBtn {
-    display: none;
-  }
 }
 
 /* 모바일 사이드 메뉴 */
 .sideMenuOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4);
   z-index: 100;
-  display: flex;
-  justify-content: flex-end;
 }
 
 .sideMenu {
-  background: #fff;
-  width: 240px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 260px;
   height: 100%;
-  padding: 1rem;
+  background: #fff;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  animation: slideIn 0.3s ease forwards;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+.slideIn {
+  animation: slideIn 0.3s forwards;
+}
+
+.slideOut {
+  animation: slideOut 0.3s forwards;
 }
 
 @keyframes slideIn {
-  from {
-    transform: translateX(100%);
-  }
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
 
-  to {
-    transform: translateX(0);
-  }
+@keyframes slideOut {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
 }
 
 .closeBtn {
-  align-self: flex-end;
-  font-size: 1.25rem;
   background: none;
   border: none;
+  font-size: 20px;
+  align-self: flex-end;
   cursor: pointer;
 }
 
 .sideNav {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  font-size: 1rem;
-  margin-top: 1rem;
+  gap: 12px;
 }
 
-.sideNavLink {
-  text-decoration: none;
-  color: #475569;
+.sideDropdown {
+  display: flex;
+  flex-direction: column;
 }
 
-.sideNavLink:hover {
-  opacity: 0.8;
-}
-
-.sideNavLink.active {
+.dropdownLabel {
   font-weight: 600;
-  color: #0f172a;
+  margin-bottom: 4px;
 }
 
 .sideAuth {
   margin-top: auto;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
-.sideAuth a {
-  color: #0f172a;
-  text-decoration: none;
-  font-size: 0.9rem;
+.sideAuth a,
+.sideAuth button {
+  display: block;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 4px 0;
+  font-size: 14px;
+  cursor: pointer;
 }
 
-.sideAuth a:hover {
-  opacity: 0.8;
+/* 반응형 */
+@media (min-width: 768px) {
+  .nav {
+    display: block;
+  }
+
+  .authLinks {
+    display: flex;
+  }
+
+  .mobileMenuBtn {
+    display: none;
+  }
+
+  .sideMenuOverlay {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .submenu {
+    display: flex !important;
+    flex-direction: column;
+    gap: 6px;
+    top: 0;
+    position: relative;
+    border: none;
+    margin: 4px 0 8px 0;
+    background: transparent;
+    text-align: left;
+  }
+
+  .submenu li {
+    margin: 0;
+    font-size: 14px;
+    font-weight: normal;
+  }
+
+  .dropdownLabel,
+  .dropdown_container {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+
+  .sideNav {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .sideAuth {
+    margin-top: auto;
+  }
 }

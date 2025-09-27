@@ -25,6 +25,9 @@ import Fee from "@/app/routes/Fee";
 import Cleaning from "@/app/routes/Cleaning";
 
 import PostForm from "@/components/postForm/PostForm";
+import Login from "./app/routes/Login";
+import Register from "./app/routes/Register";
+import MyPage from "./app/routes/Mypage";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +37,9 @@ const router = createBrowserRouter([
       { index: true, element: <SiteHome /> },
       { path: "about", element: <SiteAbout /> },
       { path: "rule", element: <Rule /> },
+      { path: "login", element: <Login /> },
+      { path: "signup", element: <Register /> },
+      { path: "mypage", element: <MyPage /> },
 
       // Notice
       {

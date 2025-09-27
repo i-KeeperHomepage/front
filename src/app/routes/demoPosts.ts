@@ -6,6 +6,8 @@ export interface DemoPost {
   createAt: string;
   content: string;
   image?: string;
+  file?: string;       // 첨부파일 경로/URL
+  fileName?: string;
 }
 
 export const demoPosts: DemoPost[] = [
