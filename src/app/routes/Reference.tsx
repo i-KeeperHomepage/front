@@ -19,7 +19,7 @@ export default function Reference() {
 
   const location = useLocation();
 
-  // ✅ 초기 로딩 시 demoPosts → 카테고리별 분리
+  // 초기 로딩 시 demoPosts → 카테고리별 분리
   useEffect(() => {
     if (
       keeperPosts.length === 0 &&
@@ -36,7 +36,7 @@ export default function Reference() {
     }
   }, [keeperPosts, seminarPosts, specialPosts]);
 
-  // ✅ 새 글 작성 시 해당 카테고리에만 추가
+  // 새 글 작성 시 해당 카테고리에만 추가
   useEffect(() => {
     if (location.state?.newPost) {
       const newPost = { ...location.state.newPost };

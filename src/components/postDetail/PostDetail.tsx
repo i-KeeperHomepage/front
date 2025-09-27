@@ -14,13 +14,16 @@ export default function PostDetail({ post }: PostDetailProps) {
     <section className={`site-container ${styles.detail}`}>
       <h2 className={styles.title}>{post.title}</h2>
       <div className={styles.meta}>
-        <span>{post.category}</span> · <span>{post.author_name}</span> · <span>{post.createAt}</span> ·{" "}
-        <span>조회</span>
+        <span>{post.category}</span> · <span>{post.author_name}</span> · <span>{post.createAt}</span>
       </div>
 
-      {post.image && (
-        <div className={styles.imageWrap}>
-          <img src={post.image} alt={post.title} />
+      {/* 첨부파일 */}
+      {post.file && (
+        <div className={styles.fileWrap}>
+          <p>첨부파일:</p>
+          <a href={post.file} download target="_blank" rel="noopener noreferrer">
+            {post.fileName || "파일 다운로드"}
+          </a>
         </div>
       )}
 

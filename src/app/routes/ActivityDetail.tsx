@@ -9,11 +9,11 @@ export default function ActivityDetail() {
   const [post, setPost] = useState<DemoPost | null>(null);
 
   useEffect(() => {
-    // ✅ 지금은 데모 데이터에서 조회
+    // 지금은 데모 데이터에서 조회
     const found = demoPosts.find((p) => p.id === Number(id));
     if (found) setPost(found);
 
-    // ✅ 나중에 백엔드 연결시 주석 해제
+    // 나중에 백엔드 연결시 주석 해제
     /*
     async function fetchPost() {
       try {
