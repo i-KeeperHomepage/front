@@ -1,11 +1,29 @@
+// ==============================
+// SiteFooter.tsx (사이트 푸터 컴포넌트)
+// ==============================
+//
+// 한국어 설명:
+// 이 컴포넌트는 모든 페이지 하단에 공통적으로 들어가는 Footer UI입니다.
+// 왼쪽에는 네비게이션 메뉴, 동아리 정보, 저작권 표시가 있고,
+// 오른쪽에는 협력기관(파트너) 로고들이 배치되어 있습니다.
+//
+// English Explanation:
+// This component represents the common footer UI displayed at the bottom of every page.
+// On the left side, it shows navigation links, club information, and copyright text.
+// On the right side, it displays partner organization logos.
+
 import styles from "./SiteFooter.module.css";
 
 export default function SiteFooter() {
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
-        {/* 왼쪽: 네비 + 정보 */}
+        {/* -----------------------------
+            왼쪽 영역: 네비게이션 + 동아리 정보 + 저작권
+            Left section: Navigation + Club Info + Copyright
+        ----------------------------- */}
         <div className={styles.left}>
+          {/* 네비게이션 메뉴 / Navigation menu */}
           <nav className={styles.nav}>
             <a href="/about">i-Keeper</a>
             <a href="/notice">Notice</a>
@@ -13,6 +31,7 @@ export default function SiteFooter() {
             <a href="/library">ETC</a>
           </nav>
 
+          {/* 동아리 정보 / Club information */}
           <div className={styles.info}>
             <p>
               ClubName : i-Keeper &nbsp;&nbsp; Address :
@@ -21,26 +40,30 @@ export default function SiteFooter() {
             </p>
           </div>
 
+          {/* 저작권 표기 / Copyright */}
           <div className={styles.copy}>
             COPYRIGHT (C) i-Keeper ALL RIGHTS RESERVED.
           </div>
         </div>
 
-        {/* 오른쪽: 협력기관 로고 */}
+        {/* -----------------------------
+            오른쪽 영역: 협력기관 로고
+            Right section: Partner logos
+        ----------------------------- */}
         <div className={styles.right}>
           <img
             src="/img/kucis_logo.png"
-            alt="협력기관1"
+            alt="협력기관1 / Partner 1"
             className={styles.partnerLogo}
           />
           <img
             src="/img/kucis_logo.png"
-            alt="협력기관2"
+            alt="협력기관2 / Partner 2"
             className={styles.partnerLogo}
           />
           <img
             src="/img/kucis_logo.png"
-            alt="협력기관3"
+            alt="협력기관3 / Partner 3"
             className={styles.partnerLogo}
           />
         </div>

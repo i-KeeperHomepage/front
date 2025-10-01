@@ -1,15 +1,43 @@
+// ==============================
+// 마이페이지 (MyPage.tsx)
+// ==============================
+//
+// 한국어 설명:
+// 이 컴포넌트는 로그인한 사용자의 마이페이지를 보여줍니다.
+// 로그인 상태를 확인하고, 회원 정보와 사용자가 작성한 글 목록을 렌더링합니다.
+// 현재는 프론트엔드에서 임시 데이터를 사용하며, 추후 백엔드 API 연동이 가능합니다.
+//
+// 주요 기능:
+// 1. 로그인 여부 확인 (localStorage의 token 검사)
+// 2. 회원 프로필 표시 (이름, 학번, 전공, 이메일, 학년/학차, 사인 이미지)
+// 3. 사용자가 작성한 글 목록 표시 (카테고리, 제목, 작성일)
+// 4. 백엔드 연결 시 fetch("/api/mypage")를 통해 실제 데이터 불러오기
+//
+// English Explanation:
+// This component displays the My Page of a logged-in user.
+// It checks login status, then renders user profile info and the list of posts they authored.
+// Currently, demo data is used in the frontend, but a backend API can be integrated later.
+//
+// Key Features:
+// 1. Check login status (validate token in localStorage)
+// 2. Display user profile (name, studentId, major, email, year, signature image)
+// 3. Display user-authored posts (category, title, created date)
+// 4. On backend integration, fetch("/api/mypage") to retrieve real data
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./MyPage.module.css";
 import type { DemoPost } from "./demoPosts";
 
+// 한국어: 사용자 프로필 타입 정의
+// English: Define user profile type
 interface UserProfile {
   name: string;
   studentId: string;
   major: string;
   email: string;
   year: string;
-  fileUrl?: string;
+  fileUrl?: string; // optional signature image
 }
 
 export default function MyPage() {
@@ -25,7 +53,8 @@ export default function MyPage() {
       return;
     }
 
-    // 프론트 임시 데이터
+    // 한국어: 프론트엔드 임시 데이터
+    // English: Temporary frontend demo data
     setUser({
       name: "홍길동",
       studentId: "20250001",
@@ -54,7 +83,8 @@ export default function MyPage() {
       },
     ]);
 
-    // 나중에 백엔드 연결
+    // 한국어: 백엔드 연동 (주석 처리)
+    // English: Backend integration (currently commented out)
     /*
     fetch("/api/mypage", {
       headers: { Authorization: `Bearer ${token}` },
@@ -64,17 +94,17 @@ export default function MyPage() {
         setUser(data.user);
         setPosts(data.posts);
       })
-      .catch((err) => console.error("마이페이지 불러오기 실패:", err));
+      .catch((err) => console.error("마이페이지 불러오기 실패 / Failed to load MyPage:", err));
     */
   }, [navigate]);
 
-  if (!user) return <p className={styles.loading}>불러오는 중...</p>;
+  if (!user) return <p className={styles.loading}>Loading...</p>;
 
   return (
     <section className={`site-container ${styles.mypage}`}>
       <h2 className={styles.title}>My Page</h2>
 
-      {/* 회원 정보 */}
+      {/* 회원 정보 / User Profile */}
       <h3 className={styles.subTitle}>회원 정보</h3>
       <table className={styles.infoTable}>
         <tbody>
@@ -92,7 +122,7 @@ export default function MyPage() {
         </tbody>
       </table>
 
-      {/* 내가 작성한 글 */}
+      {/* 내가 작성한 글 / My Posts */}
       <h3 className={styles.subTitle}>내가 작성한 글</h3>
       {posts.length > 0 ? (
         <table className={styles.postTable}>

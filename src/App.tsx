@@ -28,6 +28,8 @@ import PostForm from "@/components/postForm/PostForm";
 import Login from "./app/routes/Login";
 import Register from "./app/routes/Register";
 import MyPage from "./app/routes/Mypage";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import OfficerPage from "./app/routes/admin/OfficerPage";
 
 const router = createBrowserRouter([
   {
@@ -39,13 +41,21 @@ const router = createBrowserRouter([
       { path: "rule", element: <Rule /> },
       { path: "login", element: <Login /> },
       { path: "signup", element: <Register /> },
-      { path: "mypage", element: <MyPage /> },
+      {
+        path: "mypage",
+        element: <ProtectedRoute element={<MyPage />} />,
+      },
+
+      // Officer 전용
+      {
+        path: "officer",
+        element: (
+          <ProtectedRoute element={<OfficerPage />} requiredRole="officer" />
+        ),
+      },
 
       // Notice
-      {
-        path: "notice",
-        element: <Notice />,
-      },
+      { path: "notice", element: <Notice /> },
       {
         path: "notice/write",
         element: (
@@ -56,16 +66,10 @@ const router = createBrowserRouter([
           />
         ),
       },
-      {
-        path: "notice/:id",
-        element: <NoticeDetail />,
-      },
+      { path: "notice/:id", element: <NoticeDetail /> },
 
       // Activities
-      {
-        path: "activities",
-        element: <Activities />,
-      },
+      { path: "activities", element: <Activities /> },
       {
         path: "activities/write",
         element: (
@@ -76,63 +80,47 @@ const router = createBrowserRouter([
           />
         ),
       },
-      {
-        path: "activities/:id",
-        element: <ActivityDetail />,
-      },
+      { path: "activities/:id", element: <ActivityDetail /> },
 
-      // Reference (3개 게시판)
-      {
-        path: "reference",
-        element: <Reference />,
-      },
+      // Reference
+      { path: "reference", element: <Reference /> },
       {
         path: "reference/KeeperSeminar/write",
         element: (
           <PostForm
             categoryOptions={["Keeper 세미나"]}
-            basePath="/reference/"
+            basePath="/reference/KeeperSeminar"
             apiEndpoint="/api/posts"
           />
         ),
-      }, {
-        path: "reference/KeeperSeminar/:id",
-        element: <ReferenceDetail />,
       },
+      { path: "reference/KeeperSeminar/:id", element: <ReferenceDetail /> },
       {
         path: "reference/seminar/write",
         element: (
           <PostForm
-            categoryOptions={["Info Sharing Seminar"]}
-            basePath="/reference/"
+            categoryOptions={["정보공유세미나"]}
+            basePath="/reference/seminar"
             apiEndpoint="/api/posts"
           />
         ),
-      }, { path: "reference/seminar/:id", element: <ReferenceDetail /> },
+      },
+      { path: "reference/seminar/:id", element: <ReferenceDetail /> },
       {
         path: "reference/special/write",
         element: (
           <PostForm
-            categoryOptions={["Special Lecture"]}
-            basePath="/reference/"
+            categoryOptions={["특강"]}
+            basePath="/reference/special"
             apiEndpoint="/api/posts"
           />
         ),
       },
-
       { path: "reference/special/:id", element: <ReferenceDetail /> },
 
-      //gallery
-      {
-        path: "gallery",
-        element: <Gallery />,
-      },
-
-      // Support
-      {
-        path: "support",
-        element: <Support />,
-      },
+      // ETC
+      { path: "gallery", element: <Gallery /> },
+      { path: "support", element: <Support /> },
       {
         path: "support/write",
         element: (
