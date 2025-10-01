@@ -1,57 +1,91 @@
+// ==============================
+// PostForm.tsx (게시글 작성 폼 컴포넌트)
+// ==============================
+//
+// 한국어 설명:
+// 이 컴포넌트는 새로운 게시글을 작성하는 화면입니다.
+// 제목, 작성자, 내용, 카테고리, 첨부파일 입력 기능을 제공합니다.
+// 저장 시 `navigate`를 통해 목록 페이지로 이동하며, 새 글 데이터를 전달합니다.
+// 나중에 백엔드가 연결되면 fetch 요청을 통해 DB에 저장되도록 연동할 수 있습니다.
+//
+// English Explanation:
+// This component provides a form for creating a new post.
+// It allows input of title, author, content, category, and an attachment file.
+// On submit, it navigates back to the list page with the new post data.
+// Later, with backend integration, it will send the data to the DB via fetch.
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./PostForm.module.css";
 
+// ==============================
+// Props 정의 / Props Definition
+// ==============================
+// 한국어: 부모에서 카테고리 옵션, API 엔드포인트, 돌아갈 경로 등을 받아옴
+// English: Receives category options, API endpoint, and basePath from parent
 interface PostFormProps {
-  categoryOptions: string[];   // 게시판 카테고리 목록
-  defaultCategory?: string;    // 기본 선택 카테고리
-  basePath: string;            // 작성 후 돌아갈 경로 (예: "/activities")
-  apiEndpoint: string;         // 글 작성 API 엔드포인트 (예: "/api/posts")
+  categoryOptions: string[];   // 카테고리 목록 / Category list
+  defaultCategory?: string;    // 기본 선택 카테고리 / Default selected category
+  basePath: string;            // 작성 후 돌아갈 경로 (예: "/activities") / Redirect path after save
+  apiEndpoint: string;         // 글 작성 API 엔드포인트 / API endpoint for saving post
 }
 
 export default function PostForm({
   categoryOptions,
   defaultCategory = categoryOptions[0],
   basePath,
-  apiEndpoint,
+  apiEndpoint, //선언되지 않는 이유: 백엔드 연결 전
 }: PostFormProps) {
   const navigate = useNavigate();
 
+  // ==============================
+  // 상태 정의 / State Management
+  // ==============================
   const [category, setCategory] = useState(defaultCategory);
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [content, setContent] = useState("");
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState<File | null>(null); // 첨부파일 / Attachment file
 
+  // ==============================
+  // 저장 처리 / Submit Handler
+  // ==============================
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // 새 게시글 객체 생성 / Create new post object
     const newPost = {
-      id: Date.now(), // 로컬에서는 timestamp로 ID 생
+      id: Date.now(), // 로컬에서는 timestamp 사용 / Use timestamp locally
       category,
       title,
       author_name: author,
       content,
-      createAt: new Date().toISOString().split("T")[0],
-      file: file ? URL.createObjectURL(file) : undefined, // demo 용 (실제는 서버 업로드 필요)
+      createAt: new Date().toISOString().split("T")[0], // YYYY-MM-DD 형식
+      file: file ? URL.createObjectURL(file) : undefined, // demo 용 URL (실제는 서버 업로드 필요)
       fileName: file?.name,
     };
-    
-    // 데모: navigate로 전달
+
+    // ==============================
+    // 현재는 데모 동작 (navigate로 state 전달)
+    // Currently demo mode (pass state via navigate)
+    // ==============================
     if (window.confirm("저장하시겠습니까?")) {
       navigate(basePath, { state: { newPost } });
     }
 
-    // // confirm으로 작성 확인
-    // const confirmed = window.confirm("게시글을 저장하시겠습니까?");
-    // if (!confirmed) return;
+    // ==============================
+    // 추후 localStorage 저장 (주석 처리됨)
+    // Later: Save to localStorage (commented out)
+    // ==============================
+    /*
+    const savedPosts = JSON.parse(localStorage.getItem(basePath) || "[]");
+    localStorage.setItem(basePath, JSON.stringify([newPost, ...savedPosts]));
+    */
 
-    // // 지금은 localStorage에 저장
-    // const savedPosts = JSON.parse(localStorage.getItem(basePath) || "[]");
-    // localStorage.setItem(basePath, JSON.stringify([newPost, ...savedPosts]));
-
-
-    // 나중에 백엔드 연동
+    // ==============================
+    // 백엔드 연동 코드 (주석 처리)
+    // Backend integration (commented out)
+    // ==============================
     /*
     try {
       const res = await fetch(apiEndpoint, {
@@ -72,10 +106,11 @@ export default function PostForm({
 
   return (
     <section className={`site-container ${styles.formWrap}`}>
-      <h2 className={styles.title}>게시글 작성</h2>
+      <h2 className={styles.title}>공지 작성</h2>
 
+      {/* 작성 폼 / Write Form */}
       <form onSubmit={handleSubmit} className={styles.form}>
-        {/* 카테고리 선택 */}
+        {/* 카테고리 선택 / Category Select */}
         <div className={styles.row}>
           <label>카테고리</label>
           <select
@@ -90,7 +125,7 @@ export default function PostForm({
           </select>
         </div>
 
-        {/* 제목 */}
+        {/* 제목 / Title */}
         <div className={styles.row}>
           <label>제목</label>
           <input
@@ -101,7 +136,7 @@ export default function PostForm({
           />
         </div>
 
-        {/* 작성자 */}
+        {/* 작성자 / Author */}
         <div className={styles.row}>
           <label>작성자</label>
           <input
@@ -112,7 +147,7 @@ export default function PostForm({
           />
         </div>
 
-        {/* 내용 */}
+        {/* 내용 / Content */}
         <div className={styles.row}>
           <label>내용</label>
           <textarea
@@ -122,7 +157,7 @@ export default function PostForm({
           />
         </div>
 
-        {/* 파일 업로드 */}
+        {/* 파일 업로드 / File Upload */}
         <div className={styles.row}>
           <label>첨부파일</label>
           <input
@@ -131,7 +166,7 @@ export default function PostForm({
             accept="*"
           />
 
-          {/* 🔹 여러 개 파일 버전 */}
+          {/* 다중 파일 업로드 버전 (주석) / Multiple file upload version (commented out) */}
           {/*
           <input
             type="file"
@@ -144,7 +179,7 @@ export default function PostForm({
           */}
         </div>
 
-        {/* 버튼 */}
+        {/* 버튼 / Buttons */}
         <div className={styles.actions}>
           <button type="submit">저장</button>
           <button type="button" onClick={() => navigate(-1)}>

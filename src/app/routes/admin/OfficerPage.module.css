@@ -1,0 +1,65 @@
+.officerPage {
+  padding: 20px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.noticeBtn {
+  padding: 8px 16px;
+  background: #000;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.noticeBtn:hover {
+  background: #4b5563;
+}
+
+.subTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 20px 0 10px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.table th {
+  background: #f3f4f6;
+}
+
+.manageBtn {
+  padding: 4px 8px;
+  margin: 0 2px;
+  border: 1px solid #ccc;
+  background: #f9fafb;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.manageBtn:hover {
+  background: #e5e7eb;
+}

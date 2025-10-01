@@ -1,3 +1,6 @@
+/* 해당파일은 로그인과 회원가입 둘다 적용되는 파일 */
+/* The file is applied to both login and register subscription */
+
 .auth {
   max-width: 400px;
   margin: 40px auto;
