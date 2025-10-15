@@ -45,6 +45,10 @@ export default function Register() {
     file: null as File | null, // 파일 입력 (PNG 서명)
   });
 
+  const [authCode, setAuthCode] = useState("");       // 사용자가 입력한 인증 코드
+  const [isEmailSent, setIsEmailSent] = useState(false); // 이메일 전송 여부
+  const [isVerified, setIsVerified] = useState(false);   // 인증 성공 여부
+
   // 한국어: input 값이 변경될 때 상태 업데이트
   // English: Update state when input values change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,10 +60,47 @@ export default function Register() {
     }
   };
 
+  // 이메일 인증 코드 전송
+  const sendEmailAuth = () => {
+    if (!formData.email) return alert("이메일을 입력해주세요.");
+
+    fetch("/api/send-auth-code", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: formData.email }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("인증 코드 전송 실패");
+        alert("이메일로 인증 코드를 보냈습니다.");
+        setIsEmailSent(true);
+      })
+      .catch(console.error);
+  };
+
+  // 인증 코드 확인
+  const verifyCode = () => {
+    fetch("/api/verify-auth-code", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: formData.email, code: authCode }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          alert("인증 성공!");
+          setIsVerified(true);
+        } else {
+          alert("인증 실패. 코드를 확인해주세요.");
+        }
+      })
+      .catch(console.error);
+  };
+
   // 한국어: 폼 제출 시 실행되는 함수
   // English: Function executed when the form is submitted
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isVerified) return alert("이메일 인증을 먼저 완료해주세요.");
     console.log("회원가입 데이터:", formData);
 
     // 한국어: 나중에 백엔드 연동 시 주석 해제
@@ -75,8 +116,8 @@ export default function Register() {
       body: data,
     })
       .then((res) => {
-        if (!res.ok) throw new Error("회원가입 실패"); // Registration failed
-        navigate("/login"); // 성공 시 로그인 페이지로 이동
+        if (!res.ok) throw new Error("회원가입 실패");
+        navigate("/login");
       })
       .catch(console.error);
     */
@@ -91,6 +132,22 @@ export default function Register() {
         <input name="year" placeholder="학년/학차" required onChange={handleChange} />
         <input name="major" placeholder="전공" required onChange={handleChange} />
         <input type="email" name="email" placeholder="이메일" required onChange={handleChange} />
+        <button type="button" onClick={sendEmailAuth}>인증코드 전송</button>
+
+        {isEmailSent && !isVerified && (
+          <>
+            <input
+              type="text"
+              placeholder="인증코드 입력"
+              value={authCode}
+              onChange={(e) => setAuthCode(e.target.value)}
+            />
+            <button type="button" onClick={verifyCode}>인증 확인</button>
+          </>
+        )}
+
+        {isVerified && <p>이메일 인증 완료</p>}
+
         <input type="password" name="password" placeholder="비밀번호" required onChange={handleChange} />
         <p>사인 파일 업로드 (PNG)</p>
         <input type="file" name="file" accept="image/png" required onChange={handleChange} />

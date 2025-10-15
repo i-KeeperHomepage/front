@@ -77,7 +77,7 @@ export default function Login() {
 
     // 한국어: 프론트엔드 데모 로그인 (임원진 계정)
     // English: Frontend demo login (officer account)
-    if (formData.email === "officer@test.com" && formData.password === "1234") {
+    if (formData.email === "officer@officer.com" && formData.password === "officer") {
       localStorage.setItem("token", "test-officer-token");
       localStorage.setItem("role", "officer");
       window.dispatchEvent(new Event("login"));
@@ -87,7 +87,7 @@ export default function Login() {
 
     // 한국어: 프론트엔드 데모 로그인 (일반 회원 계정)
     // English: Frontend demo login (member account)
-    if (formData.email === "user@test.com" && formData.password === "1234") {
+    if (formData.email === "user@user.com" && formData.password === "user") {
       localStorage.setItem("token", "test-user-token");
       localStorage.setItem("role", "member");
       window.dispatchEvent(new Event("login"));

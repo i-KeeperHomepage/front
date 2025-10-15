@@ -4,6 +4,7 @@
   background: #fff;
   padding: 12px;
   overflow: hidden;
+  position: relative;
 }
 
 /* 툴바 전체를 한 줄로 */
@@ -12,6 +13,7 @@
   align-items: center;
   justify-content: space-between; 
   margin-bottom: 0.75rem;
+  position: relative;
 }
 
 /* 왼쪽 덩어리 (제목 + prev/next/오늘) */
@@ -23,9 +25,12 @@
 
 /* 제목 */
 :global(.fc .fc-toolbar-title) {
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
   font-weight: 700;
   font-size: 16px;
-  margin: 0;
+  line-height: 1;
   color: #0f172a;
 }
 
@@ -119,3 +124,42 @@
   font-weight: 500;
   color: #fff;
 }
+
+/* ============================= */
+/* 요일 색상 설정 */
+/* ============================= */
+
+/* 공휴일 날짜 빨간색 */
+:global(.fc-daygrid-day.is-holiday .fc-daygrid-day-number) {
+  color: #dc2626;
+}
+
+/* 일요일 헤더 및 날짜 빨간색 */
+:global(.fc .fc-col-header-cell.fc-day-sun),
+:global(.fc .fc-daygrid-day.fc-day-sun .fc-daygrid-day-number) {
+  color: #dc2626;
+}
+
+
+/* 토요일 헤더 및 날짜 파란색 */
+:global(.fc .fc-col-header-cell.fc-day-sat),
+:global(.fc .fc-daygrid-day.fc-day-sat .fc-daygrid-day-number) {
+  color: #2563eb; /* 파랑 */
+}
+
+/* 공휴일 날짜 빨강 */
+:global(.fc .fc-daygrid-day.is-holiday .fc-daygrid-day-number) {
+  color: #dc2626; /* 빨강 */
+}
+
+/* 공휴일 이름 텍스트 */
+:global(.fc-daygrid-day .holiday-event) {
+  color: #dc2626;
+  font-size: 0.75rem;
+  margin-top: 2px;
+  text-align: center;
+  background: none !important; 
+  border: none !important;  
+  box-shadow: none !important; 
+}
+

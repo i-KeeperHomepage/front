@@ -39,6 +39,10 @@ export default function SiteHome() {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
+  // 한국어: 로그인한 사용자의 role 확인 (localStorage에서 가져옴)
+  // English: Get logged-in user role from localStorage
+  const role = localStorage.getItem("role");
+  
   useEffect(() => {
     // 한국어: 데모 데이터 사용
     // English: Use demo data
@@ -103,7 +107,9 @@ export default function SiteHome() {
               postsPerPage={5}
               basePath="/notice"
               title="Notice"
-              showWriteButton={false} // 한국어: 공지 작성 버튼 숨김 / English: Hide notice write button
+              // 한국어: officer 권한일 때만 글쓰기 버튼 노출
+        // English: Only show write button for officer role
+        showWriteButton={role === "officer"}
             />
           </div>
         </div>

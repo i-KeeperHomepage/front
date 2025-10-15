@@ -1,4 +1,4 @@
-import { StrictMode, useEffect } from "react";
+import { useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import router from "./App";
@@ -30,7 +30,5 @@ function AppLoader() {
 
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
     <AppLoader />
-  </StrictMode>
 );

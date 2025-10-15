@@ -53,17 +53,17 @@ export default function SiteFooter() {
         <div className={styles.right}>
           <img
             src="/img/kucis_logo.png"
-            alt="협력기관1 / Partner 1"
+            alt="KUCIS"
             className={styles.partnerLogo}
           />
           <img
-            src="/img/kucis_logo.png"
-            alt="협력기관2 / Partner 2"
+            src="/img/incognito_logo.png"
+            alt="INC0GNITO"
             className={styles.partnerLogo}
           />
           <img
-            src="/img/kucis_logo.png"
-            alt="협력기관3 / Partner 3"
+            src="/img/Hspace_logo(white, name).png"
+            alt="HSPACE"
             className={styles.partnerLogo}
           />
         </div>

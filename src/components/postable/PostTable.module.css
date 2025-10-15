@@ -54,6 +54,14 @@
   color: #374151;
 }
 
+.emptyMessage {
+  text-align: center;
+  padding: 40px 0;
+  font-size: 1.1rem;
+  color: #000;
+}
+
+
 .subject {
   text-align: left;
   padding-left: 12px;

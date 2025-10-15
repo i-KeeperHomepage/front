@@ -28,7 +28,7 @@
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import styles from "./PostTable.module.css"; 
+import styles from "./PostTable.module.css";
 import type { DemoPost } from "../../app/routes/demoPosts";
 import { FaPen } from "react-icons/fa";
 import { FaAnglesLeft, FaAnglesRight } from "react-icons/fa6";
@@ -53,11 +53,11 @@ interface Post {
 // 한국어: 게시글 배열, 페이징 상태, basePath(라우팅용), 작성 버튼 여부
 // English: Props include posts array, pagination state, basePath, and write button toggle
 interface PostTableProps {
-  posts: DemoPost[];                    
-  currentPage: number;              
-  setCurrentPage: (page: number) => void; 
-  postsPerPage?: number;            
-  basePath: string;                
+  posts: DemoPost[];
+  currentPage: number;
+  setCurrentPage: (page: number) => void;
+  postsPerPage?: number;
+  basePath: string;
   title?: string;
   showWriteButton?: boolean;
 }
@@ -101,7 +101,7 @@ export default function PostTable({
       <div className={styles.headerRow}>
         {/* 게시판 제목 / Board Title */}
         <h2 className={styles.title}>{title}</h2>
-        
+
         {/* 글 작성 버튼 (officer 권한일 때만 보이도록 조정 가능) */}
         {/* Write button (can be restricted to officer role later) */}
         {showWriteButton && (
@@ -112,6 +112,7 @@ export default function PostTable({
       </div>
 
       {/* 게시글 테이블 / Post Table */}
+      {allPosts.length > 0 ? (
       <table className={styles.table}>
         <colgroup>
           <col style={{ width: "12%" }} />
@@ -130,42 +131,47 @@ export default function PostTable({
         </thead>
         <tbody>
           {currentPosts.map((post) => (
-            <tr key={post.id}>
-              <td>{post.category}</td>
-              <td className={styles.subject}>
-                <Link to={`${basePath}/${post.id}`}>{post.title}</Link>
-              </td>
-              <td>{post.author_name}</td>
-              <td>{post.createAt}</td>
-            </tr>
-          ))}
-        </tbody>
+              <tr key={post.id}>
+                <td>{post.category}</td>
+                <td className={styles.subject}>
+                  <Link to={`${basePath}/${post.id}`}>{post.title}</Link>
+                </td>
+                <td>{post.author_name}</td>
+                <td>{post.createAt}</td>
+              </tr>
+            ))}
+            </tbody>
       </table>
+      ) : (
+        <div className={styles.emptyMessage}>No posts available.</div>
+      )}
 
       {/* 페이지네이션 / Pagination */}
-      <div className={styles.pagination}>
-        <button
-          onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          <FaAnglesLeft />
-        </button>
-        {Array.from({ length: totalPages }, (_, i) => (
+      {allPosts.length > 0 && (
+        <div className={styles.pagination}>
           <button
-            key={i + 1}
-            onClick={() => setCurrentPage(i + 1)}
-            className={currentPage === i + 1 ? styles.active : ""}
+            onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
+            disabled={currentPage === 1}
           >
-            {i + 1}
+            <FaAnglesLeft />
           </button>
-        ))}
-        <button
-          onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
-          disabled={currentPage === totalPages}
-        >
-          <FaAnglesRight />
-        </button>
-      </div>
-    </div>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              onClick={() => setCurrentPage(i + 1)}
+              className={currentPage === i + 1 ? styles.active : ""}
+            >
+              {i + 1}
+            </button>
+          ))}
+          <button
+            onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
+            disabled={currentPage === totalPages}
+          >
+            <FaAnglesRight />
+          </button>
+        </div>
+      )}
+    </div >
   );
 }
