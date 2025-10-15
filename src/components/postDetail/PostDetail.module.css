@@ -39,14 +39,17 @@
 }
 
 .actions button {
-  border: 1px solid #d1d5db;
-  padding: 8px 16px;
-  background: #f9fafb;
+  padding: 6px 12px;
+  height: 38px;
   border-radius: 6px;
+  background-color: #fff;
+  color: #000;
+  font-size: 13px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  flex-shrink: 0;
+  border: 1px solid #ccc;
 }
 
 .actions button:hover {
-  background: #e5e7eb;
+  border: 1px solid #000;
 }

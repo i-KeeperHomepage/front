@@ -14,17 +14,21 @@
 // - On desktop, dropdown menus are used; on mobile, a hamburger button opens the side menu.
 // - Login status is determined via the `token` stored in localStorage, and reacts to login/logout events.
 
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styles from "./SiteHeader.module.css";
 import cn from 'classnames';
 
 export default function SiteHeader() {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false); // 모바일 메뉴 열림 여부 / Mobile menu state
 
   // 로그인 여부 상태 / Login status
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole] = useState<string | null>(null);
+
+  // hover 상태 관리 (각 dropdown별)
+  const [hoverDropdown, setHoverDropdown] = useState<string | null>(null);
 
   // 로그인 상태 확인 함수 / Check login status
   useEffect(() => {
@@ -54,7 +58,7 @@ export default function SiteHeader() {
     window.dispatchEvent(new Event("logout")); // 로그아웃 이벤트 발행 / Dispatch logout event
     setIsLoggedIn(false);
     setRole(null);
-    window.location.href = "/"; // 홈으로 이동 / Redirect to home
+    navigate("/"); // 홈으로 이동 / Redirect to home
   };
 
   return (
@@ -72,39 +76,86 @@ export default function SiteHeader() {
             </Link>
           </div>
 
-          {/* 데스크톱 네비게이션 / Desktop navigation */}
+          {/* 데스크톱 네비게이션 */}
           <nav className={styles.nav}>
             <ul className={styles.menu}>
-              {/* i-Keeper 메뉴 / i-Keeper menu */}
-              <li className={styles.dropdown}>
+              {/* i-Keeper 메뉴 */}
+              <li
+                className={styles.dropdown}
+                onMouseEnter={() => setHoverDropdown("iKeeper")}
+                onMouseLeave={() => setHoverDropdown(null)}
+              >
                 <span className={styles.dropdown_container}>i-Keeper</span>
-                <ul className={styles.submenu}>
-                  <li><NavLink to="/about">About</NavLink></li>
-                  <li><NavLink to="/rule">Rule</NavLink></li>
+                <ul
+                  className={styles.submenu}
+                  style={{
+                    display: hoverDropdown === "iKeeper" ? "block" : "none",
+                  }}
+                >
+                  <li>
+                    <NavLink to="/about">About</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/rule">Rule</NavLink>
+                  </li>
                 </ul>
               </li>
 
-              {/* Notice 메뉴 / Notice menu */}
-              <li className={styles.dropdown_container}><NavLink to="/notice">Notice</NavLink></li>
+              {/* Notice 메뉴 */}
+              <li className={styles.dropdown_container}>
+                <NavLink to="/notice">Notice</NavLink>
+              </li>
 
-              {/* Activity 메뉴 / Activity menu */}
-              <li className={styles.dropdown}>
+              {/* Activity 메뉴 */}
+              <li
+                className={styles.dropdown}
+                onMouseEnter={() => setHoverDropdown("activity")}
+                onMouseLeave={() => setHoverDropdown(null)}
+              >
                 <span className={styles.dropdown_container}>Activity</span>
-                <ul className={styles.submenu}>
-                  <li><NavLink to="/gallery">Gallery</NavLink></li>
-                  <li><NavLink to="/activities">TeamBuild</NavLink></li>
-                  <li><NavLink to="/reference">Seminar</NavLink></li>
+                <ul
+                  className={styles.submenu}
+                  style={{
+                    display: hoverDropdown === "activity" ? "block" : "none",
+                  }}
+                >
+                  <li>
+                    <NavLink to="/gallery">Gallery</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/activities">TeamBuild</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/reference">Seminar</NavLink>
+                  </li>
                 </ul>
               </li>
 
-              {/* ETC 메뉴 / ETC menu */}
-              <li className={styles.dropdown}>
+              {/* ETC 메뉴 */}
+              <li
+                className={styles.dropdown}
+                onMouseEnter={() => setHoverDropdown("etc")}
+                onMouseLeave={() => setHoverDropdown(null)}
+              >
                 <span className={styles.dropdown_container}>ETC</span>
-                <ul className={styles.submenu}>
-                  <li><NavLink to="/library">Library</NavLink></li>
-                  <li><NavLink to="/cleaning">Clean</NavLink></li>
-                  <li><NavLink to="/fee">Fee</NavLink></li>
-                  <li><NavLink to="/support">Support</NavLink></li>
+                <ul
+                  className={styles.submenu}
+                  style={{
+                    display: hoverDropdown === "etc" ? "block" : "none",
+                  }}
+                >
+                  <li>
+                    <NavLink to="/library">Library</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/cleaning">Clean</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/fee">Fee</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/support">Support</NavLink>
+                  </li>
                 </ul>
               </li>
             </ul>

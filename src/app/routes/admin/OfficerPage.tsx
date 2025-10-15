@@ -70,13 +70,19 @@ export default function OfficerPage() {
   // Toggle the role of a selected member between "member" and "officer".
   // Later, this will also send a PATCH API request to update the database.
   const handleRoleToggle = (id: number) => {
-    setMembers((prev) =>
-      prev.map((m) =>
-        m.id === id
-          ? { ...m, role: m.role === "member" ? "officer" : "member" }
-          : m
-      )
-    );
+    if (!window.confirm("정말로 이 회원의 권한을 변경하시겠습니까?")) return;
+  setMembers((prev) =>
+    
+    prev.map((m) => {
+      if (m.id === id) {
+        const newRole = m.role === "member" ? "officer" : "member";
+        // 알림 메시지 띄우기
+        alert(`${m.name}님의 권한이 ${newRole === "officer" ? "임원진" : "일반 회원"}으로 변경되었습니다.`);
+        return { ...m, role: newRole };
+      }
+      return m;
+    })
+  );
 
     // 백엔드 연동 시
     /*

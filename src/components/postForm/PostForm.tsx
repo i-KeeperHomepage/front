@@ -154,6 +154,20 @@ export default function PostForm({
             value={content}
             onChange={(e) => setContent(e.target.value)}
             required
+            rows={4}
+            style={{
+              width: "100%",          
+              padding: "8px",          
+              borderRadius: "4px",     
+              border: "1px solid #ccc",
+              fontFamily: "inherit",   
+              fontSize: "14px",        
+              lineHeight: "1.5",       
+              resize: "none",      
+              boxSizing: "border-box", 
+              outline: "none",         
+              backgroundColor: "#fff", 
+            }}
           />
         </div>
 
