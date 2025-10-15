@@ -18,6 +18,7 @@
 // 2. Provide mock data to demonstrate paid/unpaid status
 // 3. Pass columns, data, and title props to the DataTable component
 
+import { useEffect, useState } from "react";
 import DataTable from "@/components/dataTable/DataTable";
 
 export default function Fee() {
@@ -34,24 +35,18 @@ export default function Fee() {
 
   // 한국어: 예시 데이터 (나중에 백엔드 API 연동 시 교체 예정)
   // English: Example data (to be replaced with backend API later)
-  const data = [
-    {
-      userId: "user01",
-      amount: "20,000원",
-      year: "2025",
-      date: "2025-09-01",
-      status: "완납", // Paid
-      paidAt: "2025-09-01 10:00",
-    },
-    {
-      userId: "user02",
-      amount: "20,000원",
-      year: "2025",
-      date: "2025-09-01",
-      status: "미납", // Unpaid
-      paidAt: "-",
-    },
-  ];
+  const [data, setData] = useState([]);
+
+  // 백엔드 연동 
+  // 한국어: 나중에 백엔드 서버에서 회비 납부 데이터를 가져오기 위해 사용
+  // English: Later, this will fetch fee payment data from the backend
+  
+  useEffect(() => {
+    fetch("/api/fees")
+      .then((res) => res.json())
+      .then((result) => setData(result))
+      .catch((err) => console.error("loading fail:", err));
+  }, []);
 
   // 한국어: DataTable 컴포넌트 호출
   // English: Render DataTable component

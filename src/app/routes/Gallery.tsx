@@ -18,24 +18,34 @@
 // 2. Use the map function to render multiple GalleryCard components
 // 3. Arrange the cards in a responsive grid layout (1 column, 2 columns, 3 columns)
 
+import { useEffect, useState } from "react";
 import GalleryCard from "@/components/galleryCard/GalleryCard";
 import style from "./Gallery.module.css";
+
+// 한국어: 갤러리 항목 타입 정의 (이미지, 제목, 설명)
+// English: Define Gallery item type (image, title, description)
+interface GalleryItem {
+  image: string;
+  title: string;
+  description: string;
+}
 
 export default function Gallery() {
   // 한국어: 갤러리에 표시할 항목 데이터 (이미지, 제목, 설명)
   // English: Items to display in the gallery (image, title, description)
-  const items = [
-    {
-      image: "/img/racoon.png",
-      title: "보안 세미나",
-      description: "2025년 i-Keeper 정기 보안 세미나 활동 사진",
-    },
-    {
-      image: "/img/sieun.png",
-      title: "해커톤",
-      description: "팀 프로젝트를 통한 보안 해커톤 대회 참여",
-    },
-  ];
+  const [items, setItems] = useState<GalleryItem[]>([]);
+
+  // 백엔드 연동
+  // 한국어: 나중에 백엔드 서버에서 갤러리 데이터를 가져오기 위해 사용
+  // English: Later, this will fetch gallery data from the backend
+  
+  useEffect(() => {
+    fetch("/api/gallery")
+      .then((res) => res.json())
+      .then((result) => setItems(result))
+      .catch((err) => console.error("갤러리 데이터 불러오기 실패:", err));
+  }, []);
+  
 
   return (
     // 한국어: site-container 클래스로 전체 레이아웃 정렬 + Tailwind grid를 활용해 반응형 그리드 구성

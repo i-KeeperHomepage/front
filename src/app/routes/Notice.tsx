@@ -28,55 +28,48 @@
 
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { demoPosts } from "./demoPosts";
-import type { DemoPost } from "./demoPosts";
-import PostTable from "@/components/postable/PostTable"; 
+import PostTable from "@/components/postable/PostTable";
 import { Outlet } from "react-router-dom";
 
-export default function Notice() {
-  const [posts, setPosts] = useState<DemoPost[]>([]);
-  const [loading, setLoading] = useState(true);
+interface Post {
+  id: number;
+  category: string;
+  title: string;
+  author_name: string;
+  createAt: string;
+  content: string;
+  image?: string;
+}
 
-  // Pagination state
+export default function Notice() {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const location = useLocation();
 
   // 한국어: 로그인한 사용자의 role 확인 (localStorage에서 가져옴)
   // English: Get logged-in user role from localStorage
   const role = localStorage.getItem("role");
-  
-  useEffect(() => {
-    // 한국어: 현재는 데모 데이터 사용
-    // English: Using demo data for now
-    setPosts(demoPosts);
-    setLoading(false);
-  }, []); 
-  // Note: 백엔드 연결 시 이 부분 삭제 예정 (activities, reference, support 동일)
 
-  // 한국어: location.state에 newPost가 있으면 목록에 추가
-  // English: If location.state.newPost exists, prepend it to the list
-  useEffect(() => {
-    if (location.state?.newPost) {
-      setPosts((prev) => [location.state.newPost, ...prev]);
-    }
-  }, [location.state]);
-
-  // 백엔드 연동 시
-  /*
+  // 한국어: 백엔드에서 게시글 목록 불러오기
+  // English: Fetch posts from backend API
   useEffect(() => {
     async function fetchPosts() {
       try {
-        const res = await fetch("/api/posts?category=notice&page=" + currentPage);
-        const data = await res.json();
+        const res = await fetch(`/api/posts?category=notice&page=${currentPage}`);
+        if (!res.ok) throw new Error("게시글 요청 실패");
 
-        const mapped: DemoPost[] = data.items.map((p: any) => ({
+        const data = await res.json();
+        const items = Array.isArray(data.items) ? data.items : data;
+
+        const mapped: Post[] = items.map((p: any) => ({
           id: p.id,
           category: p.category?.name || "공지",
-          title: p.title,
+          title: p.title || "제목 없음",
           author_name: p.author?.name || "알 수 없음",
-          createAt: p.createdAt,
-          content: p.content,
-          image: p.imageUrl,
+          createAt: p.createdAt || "-",
+          content: p.content || "",
+          image: p.imageUrl || "",
         }));
 
         setPosts(mapped);
@@ -86,9 +79,17 @@ export default function Notice() {
         setLoading(false);
       }
     }
+
     fetchPosts();
   }, [currentPage]);
-  */
+
+  // 한국어: location.state에 newPost가 있으면 목록에 추가
+  // English: If location.state.newPost exists, prepend it to the list
+  useEffect(() => {
+    if (location.state?.newPost) {
+      setPosts((prev) => [location.state.newPost, ...prev]);
+    }
+  }, [location.state]);
 
   if (loading) return <p>불러오는 중... / Loading...</p>;
 
@@ -105,7 +106,7 @@ export default function Notice() {
         // English: Only show write button for officer role
         showWriteButton={role === "officer"}
       />
-      <Outlet/>
+      <Outlet />
     </section>
   );
 }
