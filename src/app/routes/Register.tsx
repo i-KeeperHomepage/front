@@ -5,36 +5,28 @@
 // 한국어 설명:
 // 이 컴포넌트는 회원가입(Register) 페이지입니다.
 // 사용자는 이름, 학번, 전공, 이메일, 학년/학차, 비밀번호, 서명 이미지 파일(PNG)을 입력해야 합니다.
-// 입력된 데이터는 `formData` 상태에 저장되며, 제출 시 콘솔에 출력됩니다.
-// 추후 백엔드와 연결할 수 있도록 `fetch("/api/register")` 관련 코드를 주석으로 포함시켰습니다.
+// 이메일 인증 후, 백엔드 API(`/api/register`)를 통해 회원가입 요청을 보냅니다.
 //
 // 주요 기능:
-// - useState로 입력값 관리 (문자열 및 파일)
-// - handleChange: input 값이 변경될 때 상태 업데이트
-// - handleSubmit: 폼 제출 시 현재 입력 데이터를 확인 (현재는 콘솔 출력)
-// - FormData API 사용 준비 (백엔드 연결 시 사용)
-// - 회원가입 성공 시 → 로그인 페이지로 이동 (백엔드 연동 시)
+// - FormData를 이용한 파일 포함 회원가입 요청
+// - 이메일 인증 코드 발송 및 검증(`/api/send-auth-code`, `/api/verify-auth-code`)
+// - 회원가입 성공 시 로그인 페이지로 이동
 //
 // English Explanation:
-// This component represents the user registration (sign-up) page.
-// Users must provide name, student ID, major, email, year/semester, password, and a PNG file (signature).
-// Entered data is stored in `formData` state and logged to the console on submit.
-// A commented `fetch("/api/register")` block is included for future backend integration.
-//
-// Key Features:
-// - Manage input values with useState (strings + file)
-// - handleChange: update state when inputs change
-// - handleSubmit: logs form data (for now)
-// - Prepared FormData API code (for backend connection later)
-// - On success, navigate to the login page (once backend is connected)
+// This component is the user registration page.
+// Users fill in required fields and upload a PNG signature file.
+// After email verification, a FormData POST request is sent to `/api/register`.
+// On success, the user is redirected to the login page.
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./Auth.module.css";
 
 export default function Register() {
+  const navigate = useNavigate();
 
-  // 한국어: 회원가입 입력값을 저장하는 상태
-  // English: State to store registration form values
+  // 한국어: 입력값 상태
+  // English: Form data state
   const [formData, setFormData] = useState({
     name: "",
     studentId: "",
@@ -42,18 +34,17 @@ export default function Register() {
     email: "",
     year: "",
     password: "",
-    file: null as File | null, // 파일 입력 (PNG 서명)
+    file: null as File | null, // 서명 파일
   });
 
-  const [authCode, setAuthCode] = useState("");       // 사용자가 입력한 인증 코드
-  const [isEmailSent, setIsEmailSent] = useState(false); // 이메일 전송 여부
-  const [isVerified, setIsVerified] = useState(false);   // 인증 성공 여부
+  const [authCode, setAuthCode] = useState("");
+  const [isEmailSent, setIsEmailSent] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
 
-  // 한국어: input 값이 변경될 때 상태 업데이트
-  // English: Update state when input values change
+  // input 변경 처리
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, files } = e.target;
-    if (files) {
+    if (files && files.length > 0) {
       setFormData({ ...formData, [name]: files[0] });
     } else {
       setFormData({ ...formData, [name]: value });
@@ -61,66 +52,71 @@ export default function Register() {
   };
 
   // 이메일 인증 코드 전송
-  const sendEmailAuth = () => {
+  const sendEmailAuth = async () => {
     if (!formData.email) return alert("이메일을 입력해주세요.");
 
-    fetch("/api/send-auth-code", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: formData.email }),
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("인증 코드 전송 실패");
-        alert("이메일로 인증 코드를 보냈습니다.");
-        setIsEmailSent(true);
-      })
-      .catch(console.error);
+    try {
+      const res = await fetch("/api/send-auth-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email }),
+      });
+
+      if (!res.ok) throw new Error("인증 코드 전송 실패");
+      alert("이메일로 인증 코드를 보냈습니다.");
+      setIsEmailSent(true);
+    } catch (err) {
+      console.error("이메일 인증코드 전송 실패:", err);
+      alert("이메일 인증코드 전송 중 오류가 발생했습니다.");
+    }
   };
 
   // 인증 코드 확인
-  const verifyCode = () => {
-    fetch("/api/verify-auth-code", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: formData.email, code: authCode }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          alert("인증 성공!");
-          setIsVerified(true);
-        } else {
-          alert("인증 실패. 코드를 확인해주세요.");
-        }
-      })
-      .catch(console.error);
+  const verifyCode = async () => {
+    try {
+      const res = await fetch("/api/verify-auth-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email, code: authCode }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert("인증 성공!");
+        setIsVerified(true);
+      } else {
+        alert("인증 실패. 코드를 확인해주세요.");
+      }
+    } catch (err) {
+      console.error("인증 확인 실패:", err);
+      alert("서버 오류로 인증을 완료할 수 없습니다.");
+    }
   };
 
-  // 한국어: 폼 제출 시 실행되는 함수
-  // English: Function executed when the form is submitted
-  const handleSubmit = (e: React.FormEvent) => {
+  // 회원가입 제출
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!isVerified) return alert("이메일 인증을 먼저 완료해주세요.");
-    console.log("회원가입 데이터:", formData);
 
-    // 한국어: 나중에 백엔드 연동 시 주석 해제
-    // English: Uncomment when backend API is ready
-    /*
-    const data = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (value) data.append(key, value as Blob);
-    });
+    try {
+      const data = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value) data.append(key, value as Blob);
+      });
 
-    fetch("/api/register", {
-      method: "POST",
-      body: data,
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("회원가입 실패");
-        navigate("/login");
-      })
-      .catch(console.error);
-    */
+      const res = await fetch("/api/register", {
+        method: "POST",
+        body: data,
+      });
+
+      if (!res.ok) throw new Error("회원가입 실패");
+      alert("회원가입이 완료되었습니다.");
+      navigate("/login");
+    } catch (err) {
+      console.error("회원가입 중 오류:", err);
+      alert("회원가입 중 오류가 발생했습니다. 다시 시도해주세요.");
+    }
   };
 
   return (
@@ -148,9 +144,21 @@ export default function Register() {
 
         {isVerified && <p>이메일 인증 완료</p>}
 
-        <input type="password" name="password" placeholder="비밀번호" required onChange={handleChange} />
+        <input
+          type="password"
+          name="password"
+          placeholder="비밀번호"
+          required
+          onChange={handleChange}
+        />
         <p>사인 파일 업로드 (PNG)</p>
-        <input type="file" name="file" accept="image/png" required onChange={handleChange} />
+        <input
+          type="file"
+          name="file"
+          accept="image/png"
+          required
+          onChange={handleChange}
+        />
 
         <button type="submit">회원가입</button>
       </form>

@@ -77,16 +77,16 @@ export default function PostForm({
     // 추후 localStorage 저장 (주석 처리됨)
     // Later: Save to localStorage (commented out)
     // ==============================
-    /*
+    
     const savedPosts = JSON.parse(localStorage.getItem(basePath) || "[]");
     localStorage.setItem(basePath, JSON.stringify([newPost, ...savedPosts]));
-    */
+    
 
     // ==============================
     // 백엔드 연동 코드 (주석 처리)
     // Backend integration (commented out)
     // ==============================
-    /*
+    
     try {
       const res = await fetch(apiEndpoint, {
         method: "POST",
@@ -101,7 +101,6 @@ export default function PostForm({
       console.error(err);
       alert("게시글 저장 중 오류가 발생했습니다.");
     }
-    */
   };
 
   return (

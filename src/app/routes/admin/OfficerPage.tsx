@@ -43,19 +43,10 @@ export default function OfficerPage() {
   useEffect(() => {
     // 한국어: 나중에 백엔드와 연결될 fetch API (현재 주석 처리됨)
     // English: Backend fetch API (commented out for now)
-    /*
     fetch("/api/members")
       .then((res) => res.json())
       .then((data) => setMembers(data))
       .catch(console.error);
-    */
-
-    // 한국어: 데모용 회원 데이터
-    // English: Demo member data
-    setMembers([
-      { id: 1, name: "김철수", studentId: "20250001", major: "컴퓨터공학", email: "cs@example.com", role: "member" },
-      { id: 2, name: "이영희", studentId: "20250002", major: "소프트웨어", email: "yh@example.com", role: "officer" },
-    ]);
   }, []);
 
   // ===========================
@@ -69,29 +60,36 @@ export default function OfficerPage() {
   // English:
   // Toggle the role of a selected member between "member" and "officer".
   // Later, this will also send a PATCH API request to update the database.
-  const handleRoleToggle = (id: number) => {
+  const handleRoleToggle = async (id: number) => {
     if (!window.confirm("정말로 이 회원의 권한을 변경하시겠습니까?")) return;
-  setMembers((prev) =>
-    
-    prev.map((m) => {
-      if (m.id === id) {
-        const newRole = m.role === "member" ? "officer" : "member";
-        // 알림 메시지 띄우기
-        alert(`${m.name}님의 권한이 ${newRole === "officer" ? "임원진" : "일반 회원"}으로 변경되었습니다.`);
-        return { ...m, role: newRole };
-      }
-      return m;
-    })
-  );
+
+    const target = members.find((m) => m.id === id);
+    if (!target) return;
+
+    const newRole = target.role === "member" ? "officer" : "member";
+
+    setMembers((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, role: newRole } : m))
+    );
+
+    alert(`${target.name}님의 권한이 ${newRole === "officer" ? "임원진" : "일반 회원"}으로 변경되었습니다.`);
 
     // 백엔드 연동 시
-    /*
-    fetch(`/api/members/${id}/role`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ role: newRole }),
-    });
-    */
+    try {
+      const res = await fetch(`/api/members/${id}/role`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role: newRole }),
+      });
+      if (!res.ok) throw new Error("서버 응답 오류");
+    } catch (err) {
+      console.error("권한 변경 실패:", err);
+      alert("서버와의 통신 중 오류가 발생했습니다.");
+      setMembers((prev) =>
+        prev.map((m) => (m.id === id ? { ...m, role: target.role } : m))
+      );
+    }
+
   };
 
   // ===========================
@@ -106,17 +104,25 @@ export default function OfficerPage() {
   // Ask for confirmation using a confirm dialog, and if confirmed,
   // remove the member from the list.
   // Later, you can add a DELETE API request to remove from the backend DB.
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (!window.confirm("정말로 이 회원을 삭제하시겠습니까?")) return;
+
+    const target = members.find((m) => m.id === id);
+    if (!target) return;
 
     setMembers((prev) => prev.filter((m) => m.id !== id));
 
     // 백엔드 연결 시
-    /*
-    fetch(`/api/members/${id}`, {
-      method: "DELETE",
-    });
-    */
+    try {
+      const res = await fetch(`/api/members/${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("삭제 실패");
+    } catch (err) {
+      console.error("회원 삭제 실패:", err);
+      alert("서버 통신 중 오류가 발생했습니다.");
+      setMembers((prev) => [...prev, target]);
+    }
   };
 
   // ===========================

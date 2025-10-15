@@ -24,29 +24,86 @@ export default function SiteAbout() {
   // English: Current officers data (name, year/major, description, image)
   const members = [
     {
-      name: "너구리",
+      name: "은은솔",
+      title: "회장", 
       info: "(3학년, 컴퓨터공학전공)",
       desc: (
         <>
-          출석을 왜함 어차피 교수가 출석가지고 뭐라 안함, 네?<br />
-          그랬구나 또 말을 듣고싶었구나<br />
-          지금 수업을 듣는다고 지금의 저보다 많이 벌까요?(현재 재산: 1조 4040억원)<br />
-          어이가 없다에요
+          안녕하세요, i-Keeper 회장 은은솔입니다.<br />
+          i-Keeper는 소프트웨어 개발과 보안에 관심 있는 학우들이 모여 지식을 공유하고 성장하는 동아리입니다.<br />
+          다양한 프로젝트와 세미나를 통해 함께 배우고 발전해 나가길 기대합니다.
         </>
       ),
       img: "/img/racoon.png",
     },
     {
-      name: "김신",
+      name: "김시은",
+      title: "부회장", 
       info: "(3학년, 컴퓨터공학전공)",
-      desc: <>나 배드민턴 치고싶어 저 그냥 연구실 사람이라 건들 노노 건들면 물어버림</>,
+      desc: (
+        <>
+          안녕하세요, i-Keeper 부회장 김시은입니다.<br/>
+          인공지능에 관심있으신 분,,데이터 분석에 관심있으신 분 연락주세요<br/>
+          dil 연구실 소속. 항시대기중.
+        </>
+      ),
       img: "/img/sieun.png",
     },
     {
-      name: "소현",
-      info: "(2학년, 컴퓨터공학과)",
-      desc: "설명글이 들어갑니다. 동아리에서의 역할과 주요 활동 내용...",
-      img: "/img/member3.jpg",
+      name: "이시언",
+      title: "써트장", 
+      info: "(3학년, 컴퓨터공학전공)",
+      desc: (
+        <>
+          서연 법인재단 산하 제약사업부 이사장<br />
+          코딩하다 몸이 아프면 찾아오세요, 무료로 진료해드립니다.<br />
+        </>
+      ),
+      img: "/img/sieun.png",
+    },
+    {
+      name: "권구준",
+      title: "써트부장", 
+      info: "(2학년, 사이버보안전공)",
+      desc: (
+        <>
+          
+        </>
+      ),
+      img: "/img/sieun.png",
+    },
+    {
+      name: "이대근",
+      title: "교육부장", 
+      info: "(2학년, 컴퓨터공학전공)",
+      desc: (
+        <>
+          
+        </>
+      ),
+      img: "/img/sieun.png",
+    },
+    {
+      name: "남우석",
+      title: "장비부장", 
+      info: "(2학년, 사이버보안전공)",
+      desc: (
+        <>
+          
+        </>
+      ),
+      img: "/img/sieun.png",
+    },
+    {
+      name: "이사윤",
+      title: "총무", 
+      info: "(2학년, 컴퓨터공학전공)",
+      desc: (
+        <>
+          
+        </>
+      ),
+      img: "/img/sieun.png",
     },
   ];
 
@@ -77,6 +134,7 @@ export default function SiteAbout() {
             <h4 className={styles.memberName}>
               {m.name} <span>{m.info}</span>
             </h4>
+            <p className={styles.memberRole}>{m.title}</p>
             <p className={styles.memberDesc}>{m.desc}</p>
           </div>
         ))}

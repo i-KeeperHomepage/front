@@ -27,7 +27,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./MyPage.module.css";
-import type { DemoPost } from "./demoPosts";
 
 // 한국어: 사용자 프로필 타입 정의
 // English: Define user profile type
@@ -40,10 +39,20 @@ interface UserProfile {
   fileUrl?: string; // optional signature image
 }
 
+// 한국어: 사용자가 작성한 게시글 타입 정의
+// English: Define post type authored by user
+interface UserPost {
+  id: number;
+  category: string;
+  title: string;
+  createAt: string;
+}
+
 export default function MyPage() {
   const navigate = useNavigate();
   const [user, setUser] = useState<UserProfile | null>(null);
-  const [posts, setPosts] = useState<DemoPost[]>([]);
+  const [posts, setPosts] = useState<UserPost[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -53,52 +62,56 @@ export default function MyPage() {
       return;
     }
 
-    // 한국어: 프론트엔드 임시 데이터
-    // English: Temporary frontend demo data
-    setUser({
-      name: "홍길동",
-      studentId: "20250001",
-      major: "컴퓨터공학과",
-      email: "test@example.com",
-      year: "3학년 1학기",
-      fileUrl: "/img/sign.png",
-    });
+    // 백엔드 연동
+    // 한국어: 로그인한 사용자의 마이페이지 정보 및 작성한 글을 불러옴
+    // English: Fetch user profile and authored posts from backend
+    async function fetchMyPage() {
+      try {
+        const res = await fetch("/api/mypage", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-    setPosts([
-      {
-        id: 1,
-        category: "공지",
-        title: "i-Keeper 세미나 안내",
-        author_name: "홍길동",
-        content: "2025년 보안 세미나 일정입니다.",
-        createAt: "2025-09-26",
-      },
-      {
-        id: 2,
-        category: "특강",
-        title: "웹 보안 특강",
-        author_name: "홍길동",
-        content: "웹 취약점 분석 특강 예정.",
-        createAt: "2025-09-20",
-      },
-    ]);
+        if (!res.ok) {
+          throw new Error("마이페이지 불러오기 실패");
+        }
 
-    // 한국어: 백엔드 연동 (주석 처리)
-    // English: Backend integration (currently commented out)
-    /*
-    fetch("/api/mypage", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setUser(data.user);
-        setPosts(data.posts);
-      })
-      .catch((err) => console.error("마이페이지 불러오기 실패 / Failed to load MyPage:", err));
-    */
+        const data = await res.json();
+
+        // 한국어: 백엔드 응답 구조에 따라 데이터 매핑
+        // English: Map backend response to frontend structure
+        const mappedUser: UserProfile = {
+          name: data.user?.name || "이름 없음",
+          studentId: data.user?.studentId || "-",
+          major: data.user?.major || "-",
+          email: data.user?.email || "-",
+          year: data.user?.year || "-",
+          fileUrl: data.user?.fileUrl || "",
+        };
+
+        const mappedPosts: UserPost[] = Array.isArray(data.posts)
+          ? data.posts.map((p: any) => ({
+              id: p.id,
+              category: p.category?.name || "기타",
+              title: p.title || "제목 없음",
+              createAt: p.createdAt || "-",
+            }))
+          : [];
+
+        setUser(mappedUser);
+        setPosts(mappedPosts);
+      } catch (err) {
+        console.error("마이페이지 데이터 불러오기 실패:", err);
+        alert("서버 연결 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchMyPage();
   }, [navigate]);
 
-  if (!user) return <p className={styles.loading}>Loading...</p>;
+  if (loading) return <p className={styles.loading}>불러오는 중...</p>;
+  if (!user) return <p className={styles.loading}>회원 정보를 불러올 수 없습니다.</p>;
 
   return (
     <section className={`site-container ${styles.mypage}`}>

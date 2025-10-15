@@ -22,6 +22,7 @@
 // 2. Define actual data in the `data` array (can be replaced with backend data later)
 // 3. Pass columns and data as props to the DataTable component for rendering
 
+import { useEffect, useState } from "react";
 import DataTable from "@/components/dataTable/DataTable";
 
 export default function Library() {
@@ -38,24 +39,19 @@ export default function Library() {
 
   // 한국어: 도서 데이터 (샘플)
   // English: Sample book data
-  const data = [
-    {
-      title: "해킹의 기술",         // Book title
-      author: "홍길동",            // Author
-      publisher: "보안출판사",      // Publisher
-      isbn: "978-1234567890",     // ISBN
-      shelf: "A-12",              // Shelf number
-      dueDate: "2025-10-10",      // Due date
-    },
-    {
-      title: "정보보호 개론",       // Book title
-      author: "이몽룡",            // Author
-      publisher: "ITBooks",       // Publisher
-      isbn: "978-0987654321",     // ISBN
-      shelf: "B-07",              // Shelf number
-      dueDate: "2025-11-01",      // Due date
-    },
-  ];
+  const [data, setData] = useState([]);
+
+  // 백엔드 연동
+  // 한국어: 나중에 백엔드 서버에서 도서 데이터를 가져오기 위해 사용
+  // English: Later, this will fetch library data from the backend
+  
+  useEffect(() => {
+    fetch("/api/library")
+      .then((res) => res.json())
+      .then((result) => setData(result))
+      .catch((err) => console.error("loading fail:", err));
+  }, []);
+  
 
   // 한국어: DataTable 컴포넌트로 렌더링
   // English: Render with DataTable component
