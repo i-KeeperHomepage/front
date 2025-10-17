@@ -27,6 +27,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./MyPage.module.css";
+import Loading from "@/components/common/Loading";
 
 // 한국어: 사용자 프로필 타입 정의
 // English: Define user profile type
@@ -110,8 +111,8 @@ export default function MyPage() {
     fetchMyPage();
   }, [navigate]);
 
-  if (loading) return <p className={styles.loading}>불러오는 중...</p>;
-  if (!user) return <p className={styles.loading}>회원 정보를 불러올 수 없습니다.</p>;
+  if (loading) return <Loading/>;
+  if (!user) return <Loading message="회원 정보를 불러올 수 없습니다"/>;
 
   return (
     <section className={`site-container ${styles.mypage}`}>

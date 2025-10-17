@@ -47,7 +47,7 @@ export default function SiteAbout() {
           dil 연구실 소속. 항시대기중.
         </>
       ),
-      img: "/img/sieun.png",
+      img: "/img/racoon.png",
     },
     {
       name: "이시언",
@@ -59,7 +59,7 @@ export default function SiteAbout() {
           코딩하다 몸이 아프면 찾아오세요, 무료로 진료해드립니다.<br />
         </>
       ),
-      img: "/img/sieun.png",
+      img: "/img/racoon.png",
     },
     {
       name: "권구준",
@@ -70,7 +70,7 @@ export default function SiteAbout() {
           
         </>
       ),
-      img: "/img/sieun.png",
+      img: "/img/racoon.png",
     },
     {
       name: "이대근",
@@ -78,10 +78,10 @@ export default function SiteAbout() {
       info: "(2학년, 컴퓨터공학전공)",
       desc: (
         <>
-          
+          안녕하세요. 교육부장입니다.
         </>
       ),
-      img: "/img/sieun.png",
+      img: "/img/racoon.png",
     },
     {
       name: "남우석",
@@ -92,7 +92,7 @@ export default function SiteAbout() {
           
         </>
       ),
-      img: "/img/sieun.png",
+      img: "/img/racoon.png",
     },
     {
       name: "이사윤",
@@ -103,7 +103,7 @@ export default function SiteAbout() {
           
         </>
       ),
-      img: "/img/sieun.png",
+      img: "/img/racoon.png",
     },
   ];
 

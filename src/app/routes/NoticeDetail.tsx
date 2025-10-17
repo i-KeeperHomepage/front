@@ -22,6 +22,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PostDetail from "@/components/postDetail/PostDetail";
+import Loading from "@/components/common/Loading";
 
 interface Post {
   id: number;
@@ -81,11 +82,11 @@ export default function NoticeDetail() {
   // ==========================
   // 상태별 렌더링
   // ==========================
-  if (loading) return <p>불러오는 중...</p>;
+  if (loading) return <Loading/>;
   if (error) return <p>{error}</p>;
-  if (!post) return <p>게시글을 찾을 수 없습니다.</p>;
+  if (!post) return <Loading message="게시글을 찾을 수 없습니다."/>;
 
   // 한국어: 게시글이 있으면 PostDetail 렌더링
   // English: Render PostDetail when post exists
-  return <PostDetail post={post} />;
+  return <PostDetail/>;
 }

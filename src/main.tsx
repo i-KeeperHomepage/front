@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import router from "./App";
 import "./index.css";
+import "@/global.css";
 
 const kakaoKey = import.meta.env.VITE_KAKAO_API_KEY;
 

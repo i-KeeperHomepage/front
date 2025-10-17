@@ -12,16 +12,12 @@
 //
 // English Explanation:
 // This component displays the club "Activities" board.
-// Main features:
-// 1. Fetch posts from backend and display them
-// 2. Pagination (shows 5 posts per page)
-// 3. Adds new posts when created
-// 4. Uses PostTable component to render posts in a table format
 
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Outlet } from "react-router-dom";
 import PostTable from "@/components/postable/PostTable";
-import { Outlet } from "react-router-dom";
+import type { PostRow } from "@/components/postable/PostTable";
+import Loading from "@/components/common/Loading";
 
 interface Post {
   id: number;
@@ -33,23 +29,29 @@ interface Post {
   image?: string;
 }
 
+const PAGE_LIMIT = 5;
+
 export default function Activities() {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState<Post[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const location = useLocation();
 
-  // 한국어: 백엔드 데이터 불러오기
-  // English: Fetch posts from backend
+  // 백엔드 데이터 불러오기
   useEffect(() => {
     async function fetchPosts() {
       try {
-        const res = await fetch(`/api/posts?category=activities&page=${currentPage}`);
+        setLoading(true);
+
+        const res = await fetch(
+          `/api/posts?category=activities&page=${currentPage}&limit=${PAGE_LIMIT}`
+        );
         if (!res.ok) throw new Error("Failed to fetch posts");
 
         const data = await res.json();
-        const items = Array.isArray(data.items) ? data.items : data; // items 키가 없을 수도 있음
+        const items = Array.isArray(data.items) ? data.items : data;
 
         const mapped: Post[] = items.map((p: any) => ({
           id: p.id,
@@ -62,6 +64,18 @@ export default function Activities() {
         }));
 
         setPosts(mapped);
+
+        // totalPages 계산: 헤더 X-Total-Count 우선, 없으면 바디 totalCount 사용, 둘 다 없으면 안전망
+        const headerCount = res.headers.get("X-Total-Count");
+        const totalCount = headerCount
+          ? Number(headerCount)
+          : Number(data.totalCount ?? 0);
+
+        const pages =
+          totalCount > 0
+            ? Math.max(1, Math.ceil(totalCount / PAGE_LIMIT))
+            : Math.max(1, Math.ceil(items.length / PAGE_LIMIT));
+        setTotalPages(pages);
       } catch (err) {
         console.error("게시글 불러오기 실패:", err);
       } finally {
@@ -72,26 +86,38 @@ export default function Activities() {
     fetchPosts();
   }, [currentPage]);
 
-  // 한국어: 새 글 반영
-  // English: Add newly created post from location.state
+  // 새 글 반영
   useEffect(() => {
-    if (location.state?.newPost) {
-      setPosts((prev) => [location.state.newPost, ...prev]);
+    const state: any = location.state;
+    if (state?.newPost) {
+      const np = state.newPost as Post;
+      setPosts((prev) => [np, ...prev]);
     }
   }, [location.state]);
 
-  if (loading) return <p>불러오는 중...</p>;
+  if (loading) return <Loading/>;
+
+  // PostTable에 넘길 때만 필드명 표준화
+  const normalizedPosts: PostRow[] = posts.map((p) => ({
+    id: p.id,
+    category: p.category,
+    title: p.title,
+    author: p.author_name,
+    createdAt: p.createAt,
+    content: p.content,
+    image: p.image,
+  }));
 
   return (
     <section>
       <PostTable
-        posts={posts}                 // 게시글 목록
-        currentPage={currentPage}     // 현재 페이지
-        setCurrentPage={setCurrentPage} // 페이지 변경 함수
-        postsPerPage={5}              // 페이지당 글 개수
-        basePath="/activities"        // 상세보기, 글쓰기 경로
-        title="Team Build"            // 게시판 제목
-        showWriteButton={true}        // 작성 버튼 표시 여부
+        posts={normalizedPosts}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        totalPages={totalPages}
+        basePath="/activities"
+        title="Team Build"
+        showWriteButton={true}
       />
       <Outlet />
     </section>
