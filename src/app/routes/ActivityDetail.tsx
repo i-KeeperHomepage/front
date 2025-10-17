@@ -21,6 +21,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PostDetail from "@/components/postDetail/PostDetail";
+import Loading from "@/components/common/Loading";
 
 interface Post {
   id: number;
@@ -79,10 +80,10 @@ export default function ActivityDetail() {
 
   // 한국어: 게시글을 찾을 수 없을 경우 메시지 출력
   // English: Show message if no post is found
-  if (loading) return <p>불러오는 중...</p>;
-  if (!post) return <p>게시글을 찾을 수 없습니다.</p>;
+  if (loading) return <Loading/>;
+  if (!post) return <Loading message="게시글을 찾을 수 없습니다."/>;
 
   // 한국어: PostDetail 컴포넌트를 이용해 상세내용 표시
   // English: Render post details using PostDetail component
-  return <PostDetail post={post} />;
+  return <PostDetail/>;
 }

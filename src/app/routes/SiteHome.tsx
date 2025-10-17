@@ -6,101 +6,74 @@
 // 이 컴포넌트는 홈페이지 메인 화면입니다.
 // 주요 구성:
 // 1. 동아리 소개 (Hero Section)
-// 2. 일정(Calendar) → ClubCalendar 컴포넌트 사용
-// 3. 공지 미리보기(Notice Preview) → PostTable 컴포넌트 사용
+// 2. 일정(Calendar) → ClubCalendar (자체 fetch)
+// 3. 공지 미리보기 → PostTable (부모에서 fetch 후 전달)
 //
-// English Explanation:
-// This component is the homepage (main screen).
-// Main sections:
-// 1. Club introduction (Hero Section)
-// 2. Schedule (Calendar) → using ClubCalendar component
-// 3. Notice preview → using PostTable component
+// English:
+// Home page with hero, calendar, and notice preview.
 
 import { useEffect, useState } from "react";
 import ClubCalendar from "@/components/calendar/ClubCalendar";
 import PostTable from "@/components/postable/PostTable";
+import type { PostRow } from "@/components/postable/PostTable";
+import Loading from "@/components/common/Loading";
 import styles from "./SiteHome.module.css";
 
-// 게시글 타입 정의
-interface Post {
-  id: number;
-  category: string;
-  title: string;
-  author: string;
-  createdAt: string;
-  content: string;
-  image?: string;
-}
-
-// 일정 데이터 타입 정의
-interface Event {
-  title: string;
-  startDate: string;
-  endDate?: string;
-}
+const PAGE_LIMIT = 5;
 
 export default function SiteHome() {
-  // 한국어: 상태값 - 공지글(Post) 및 일정(Event) 관리
-  // English: State - manage notice posts and calendar events
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [events, setEvents] = useState<Event[]>([]);
+  const [posts, setPosts] = useState<PostRow[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // 한국어: 로그인한 사용자의 role 확인 (localStorage에서 가져옴)
-  // English: Get logged-in user role from localStorage
   const role = localStorage.getItem("role");
 
-  // ==============================
-  // 공지 & 일정 데이터 백엔드에서 불러오기
-  // ==============================
   useEffect(() => {
-    async function fetchData() {
+    (async () => {
       try {
-        // 1️⃣ 공지 데이터 불러오기
-        const noticeRes = await fetch(`/api/posts?category=notice&page=${currentPage}&limit=5`);
-        if (!noticeRes.ok) throw new Error("공지 데이터를 불러오지 못했습니다.");
-        const noticeData = await noticeRes.json();
+        setLoading(true);
+        setError(null);
 
-        const mappedPosts: Post[] = noticeData.items.map((p: any) => ({
+        const res = await fetch(`/api/posts?category=notice&page=${currentPage}&limit=${PAGE_LIMIT}`);
+        if (!res.ok) throw new Error("공지 데이터를 불러오지 못했습니다.");
+
+        const data = await res.json();
+        const items = Array.isArray(data.items) ? data.items : data;
+
+        const mapped: PostRow[] = items.map((p: any) => ({
           id: p.id,
-          category: p.category?.name || "공지",
-          title: p.title,
-          author: p.author?.name || "관리자",
-          createdAt: p.createdAt,
-          content: p.content,
+          category: p.category?.name ?? "공지",
+          title: p.title ?? "제목 없음",
+          author: p.author?.name ?? "관리자",
+          createdAt: p.createdAt ?? "",
+          content: p.content ?? "",
           image: p.imageUrl,
         }));
 
-        setPosts(mappedPosts);
+        setPosts(mapped);
 
-        // 2️⃣ 일정 데이터 불러오기
-        const eventRes = await fetch("/api/events");
-        if (!eventRes.ok) throw new Error("일정 데이터를 불러오지 못했습니다.");
-        const eventData = await eventRes.json();
-
-        const mappedEvents: Event[] = eventData.map((e: any) => ({
-          title: e.title,
-          startDate: e.startDate,
-          endDate: e.endDate,
-        }));
-
-        setEvents(mappedEvents);
-      } catch (err) {
-        console.error("데이터 불러오기 실패:", err);
+        const headerCount = res.headers.get("X-Total-Count");
+        const totalCount = headerCount ? Number(headerCount) : Number(data.totalCount ?? 0);
+        const pages =
+          totalCount > 0
+            ? Math.max(1, Math.ceil(totalCount / PAGE_LIMIT))
+            : Math.max(1, Math.ceil(items.length / PAGE_LIMIT));
+        setTotalPages(pages);
+      } catch (e: any) {
+        setError(e.message ?? "알 수 없는 오류");
       } finally {
         setLoading(false);
       }
-    }
-
-    fetchData();
+    })();
   }, [currentPage]);
 
-  if (loading) return <p>불러오는 중...</p>; // Loading 상태 표시 / Show loading state
+  if (loading) return <Loading message="불러오는 중..." />;
 
   return (
     <section className={`site-container ${styles.home}`}>
-      {/* 한국어: 동아리 소개 영역 / English: Club introduction section */}
+      {/* 동아리 소개 */}
       <div className={styles.hero}>
         <h2 className={styles.heroTitle}>우리 동아리에 대하여</h2>
         <p className={styles.heroText}>
@@ -111,26 +84,25 @@ export default function SiteHome() {
         </p>
       </div>
 
-      {/* 한국어: 일정 + 공지 미리보기 레이아웃 / English: Schedule + Notice preview layout */}
+      {/* 일정 + 공지 미리보기 */}
       <div className={styles.section}>
         <div className={styles.contentRow}>
-          {/* 한국어: 일정 캘린더 / English: Schedule calendar */}
+          {/* 일정 캘린더: props 없이 사용 */}
           <div className={styles.calendarBox}>
-            <ClubCalendar events={events} />
+            <ClubCalendar />
           </div>
 
-          {/* 한국어: 공지 미리보기 / English: Notice preview */}
+          {/* 공지 미리보기 */}
           <div className={styles.noticeBox}>
             <PostTable
               posts={posts}
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
-              postsPerPage={5}
+              totalPages={totalPages}
               basePath="/notice"
               title="Notice"
-              // 한국어: officer 권한일 때만 글쓰기 버튼 노출
-              // English: Only show write button for officer role
               showWriteButton={role === "officer"}
+              error={error}
             />
           </div>
         </div>

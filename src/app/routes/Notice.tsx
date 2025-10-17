@@ -29,7 +29,9 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import PostTable from "@/components/postable/PostTable";
+import type { PostRow } from "@/components/postable/PostTable";
 import { Outlet } from "react-router-dom";
+import Loading from "@/components/common/Loading";
 
 interface Post {
   id: number;
@@ -41,10 +43,15 @@ interface Post {
   image?: string;
 }
 
+const PAGE_LIMIT = 5;
+
 export default function Notice() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  
   const location = useLocation();
 
   // 한국어: 로그인한 사용자의 role 확인 (localStorage에서 가져옴)
@@ -56,6 +63,9 @@ export default function Notice() {
   useEffect(() => {
     async function fetchPosts() {
       try {
+        setLoading(true);
+        setError(null);
+
         const res = await fetch(`/api/posts?category=notice&page=${currentPage}`);
         if (!res.ok) throw new Error("게시글 요청 실패");
 
@@ -73,8 +83,20 @@ export default function Notice() {
         }));
 
         setPosts(mapped);
-      } catch (err) {
-        console.error("게시글 불러오기 실패 / Failed to load posts:", err);
+      // totalPages 계산: 헤더 X-Total-Count 우선, 바디 totalCount 보조, 둘 다 없으면 안전망
+        const headerCount = res.headers.get("X-Total-Count");
+        const totalCount = headerCount
+          ? Number(headerCount)
+          : Number(data.totalCount ?? 0);
+
+        const pages =
+          totalCount > 0
+            ? Math.max(1, Math.ceil(totalCount / PAGE_LIMIT))
+            : Math.max(1, Math.ceil(items.length / PAGE_LIMIT));
+        setTotalPages(pages);
+      } catch (err: any) {
+        console.error("게시글 불러오기 실패:", err);
+        setError(err.message ?? "알 수 없는 오류");
       } finally {
         setLoading(false);
       }
@@ -86,25 +108,39 @@ export default function Notice() {
   // 한국어: location.state에 newPost가 있으면 목록에 추가
   // English: If location.state.newPost exists, prepend it to the list
   useEffect(() => {
-    if (location.state?.newPost) {
-      setPosts((prev) => [location.state.newPost, ...prev]);
+    const state: any = location.state;
+    if (state?.newPost) {
+      const np = state.newPost as Post;
+      setPosts((prev) => [np, ...prev]);
     }
   }, [location.state]);
 
-  if (loading) return <p>불러오는 중... / Loading...</p>;
+  if (loading) return <Loading/>;
+
+   // PostTable에 넘길 때만 필드명 표준화(PostRow로 매핑)
+  const normalizedPosts: PostRow[] = posts.map((p) => ({
+    id: p.id,
+    category: p.category,
+    title: p.title,
+    author: p.author_name,
+    createdAt: p.createAt,
+    content: p.content,
+    image: p.image,
+  }));
 
   return (
     <section>
       <PostTable
-        posts={posts}
+      posts={normalizedPosts}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
-        postsPerPage={5}
+        totalPages={totalPages}
         basePath="/notice"
         title="Notice"
         // 한국어: officer 권한일 때만 글쓰기 버튼 노출
         // English: Only show write button for officer role
         showWriteButton={role === "officer"}
+        error={error}
       />
       <Outlet />
     </section>

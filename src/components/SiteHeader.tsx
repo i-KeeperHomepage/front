@@ -126,7 +126,7 @@ export default function SiteHeader() {
                     <NavLink to="/activities">TeamBuild</NavLink>
                   </li>
                   <li>
-                    <NavLink to="/reference">Seminar</NavLink>
+                    <NavLink to="/seminar">Seminar</NavLink>
                   </li>
                 </ul>
               </li>
@@ -145,18 +145,18 @@ export default function SiteHeader() {
                   }}
                 >
                   <li>
-                    <NavLink to="/library">Library</NavLink>
-                  </li>
+                <NavLink to="/library">Library</NavLink>
+              </li>
                   <li>
                     <NavLink to="/cleaning">Clean</NavLink>
                   </li>
                   <li>
                     <NavLink to="/fee">Fee</NavLink>
                   </li>
-                  <li>
-                    <NavLink to="/support">Support</NavLink>
-                  </li>
                 </ul>
+              </li>
+              <li className={styles.dropdown_container}>
+                <NavLink to="/support">Support</NavLink>
               </li>
             </ul>
           </nav>
@@ -248,8 +248,12 @@ export default function SiteHeader() {
                   <li><NavLink to="/library" onClick={() => setOpen(false)}>Library</NavLink></li>
                   <li><NavLink to="/cleaning" onClick={() => setOpen(false)}>Clean</NavLink></li>
                   <li><NavLink to="/fee" onClick={() => setOpen(false)}>Fee</NavLink></li>
-                  <li><NavLink to="/support" onClick={() => setOpen(false)}>Support</NavLink></li>
                 </ul>
+              </div>
+
+              {/* Support 메뉴 */}
+              <div className={cn(styles.sideDropdown, styles.dropdownLabel)}>
+                <NavLink to="/support" onClick={() => setOpen(false)}>Support</NavLink>
               </div>
             </nav>
 

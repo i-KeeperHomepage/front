@@ -215,6 +215,7 @@
     top: 0;
     position: relative;
     border: none;
+    box-shadow: none;
     margin: 4px 0 8px 0;
     background: transparent;
     text-align: left;

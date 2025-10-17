@@ -22,45 +22,38 @@ import { useEffect, useState } from "react";
 import GalleryCard from "@/components/galleryCard/GalleryCard";
 import style from "./Gallery.module.css";
 
-// 한국어: 갤러리 항목 타입 정의 (이미지, 제목, 설명)
-// English: Define Gallery item type (image, title, description)
+// 갤러리 항목 타입 정의
 interface GalleryItem {
-  image: string;
+  imageUrl: string;
   title: string;
   description: string;
 }
 
 export default function Gallery() {
-  // 한국어: 갤러리에 표시할 항목 데이터 (이미지, 제목, 설명)
-  // English: Items to display in the gallery (image, title, description)
   const [items, setItems] = useState<GalleryItem[]>([]);
 
-  // 백엔드 연동
-  // 한국어: 나중에 백엔드 서버에서 갤러리 데이터를 가져오기 위해 사용
-  // English: Later, this will fetch gallery data from the backend
-  
   useEffect(() => {
     fetch("/api/gallery")
       .then((res) => res.json())
       .then((result) => setItems(result))
       .catch((err) => console.error("갤러리 데이터 불러오기 실패:", err));
   }, []);
-  
 
   return (
-    // 한국어: site-container 클래스로 전체 레이아웃 정렬 + Tailwind grid를 활용해 반응형 그리드 구성
-    // English: Layout aligned with site-container + responsive grid using Tailwind
     <section className="site-container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      {/* 한국어: 섹션 제목 */}
-      {/* English: Section Title */}
       <h2 className={style.subject}>Gallery</h2>
 
-      {/* 한국어: items 배열을 map으로 순회하면서 GalleryCard 렌더링 */}
-      {/* English: Render GalleryCard for each item in items */}
+      {/* 빈 상태 표시 */}
+      {items.length === 0 && (
+        <div className={`col-span-full ${style.empty}`}>
+          등록된 게시글이 없습니다.
+        </div>
+      )}
+
       {items.map((item, idx) => (
         <GalleryCard
           key={idx}
-          image={item.image}
+          imageUrl={item.imageUrl}
           title={item.title}
           description={item.description}
         />

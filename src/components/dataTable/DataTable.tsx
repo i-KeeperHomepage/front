@@ -80,7 +80,7 @@ export default function DataTable({ columns, data, title }: DataTableProps) {
           ) : (
             // 데이터가 없을 경우 / If no data available
             <tr>
-              <td colSpan={columns.length}>데이터가 없습니다. / No data available</td>
+              <td className={styles.empty} colSpan={columns.length}>등록된 데이터가 없습니다.</td>
             </tr>
           )}
         </tbody>

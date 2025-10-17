@@ -83,40 +83,40 @@ const router = createBrowserRouter([
       { path: "activities/:id", element: <ActivityDetail /> },
 
       // Reference
-      { path: "reference", element: <Reference /> },
+      { path: "seminar", element: <Reference /> },
       {
-        path: "reference/KeeperSeminar/write",
+        path: "seminar/KeeperSeminar/write",
         element: (
           <PostForm
             categoryOptions={["Keeper 세미나"]}
-            basePath="/reference/KeeperSeminar"
+            basePath="/seminar/KeeperSeminar"
             apiEndpoint="/api/posts"
           />
         ),
       },
-      { path: "reference/KeeperSeminar/:id", element: <ReferenceDetail /> },
+      { path: "seminar/KeeperSeminar/:id", element: <ReferenceDetail /> },
       {
-        path: "reference/seminar/write",
+        path: "seminar/seminar/write",
         element: (
           <PostForm
             categoryOptions={["정보공유세미나"]}
-            basePath="/reference/seminar"
+            basePath="/seminar/seminar"
             apiEndpoint="/api/posts"
           />
         ),
       },
-      { path: "reference/seminar/:id", element: <ReferenceDetail /> },
+      { path: "seminar/seminar/:id", element: <ReferenceDetail /> },
       {
-        path: "reference/special/write",
+        path: "seminar/special/write",
         element: (
           <PostForm
             categoryOptions={["특강"]}
-            basePath="/reference/special"
+            basePath="/seminar/special"
             apiEndpoint="/api/posts"
           />
         ),
       },
-      { path: "reference/special/:id", element: <ReferenceDetail /> },
+      { path: "seminar/special/:id", element: <ReferenceDetail /> },
 
       // ETC
       { path: "gallery", element: <Gallery /> },
