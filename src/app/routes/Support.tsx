@@ -11,17 +11,12 @@
 //
 // English Explanation:
 // This component is the 1:1 Inquiry board page.
-// Main features:
-// 1. Fetch posts from backend API
-// 2. Pagination (managed with currentPage state)
-// 3. Reflect new posts using location.state after writing
 
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import PostTable from "@/components/postable/PostTable";
-import { Outlet } from "react-router-dom";
+import { useLocation, Outlet } from "react-router-dom";
+import PostTable, { type PostRow } from "@/components/postable/PostTable";
+import Loading from "@/components/common/Loading";
 
-// 게시글 데이터 타입 정의 / Define post data type
 interface Post {
   id: number;
   category: string;
@@ -32,41 +27,59 @@ interface Post {
   image?: string;
 }
 
+const PAGE_LIMIT = 5;
+
 export default function Support() {
-  // 한국어: 게시글 목록 상태 / English: State for post list
+  // 목록 원본 상태
   const [posts, setPosts] = useState<Post[]>([]);
-  // 한국어: 로딩 상태 / English: Loading state
   const [loading, setLoading] = useState(true);
-  // 한국어: 현재 페이지 번호 / English: Current page number
   const [currentPage, setCurrentPage] = useState(1);
+  const [error, setError] = useState<string | null>(null);
+  const [totalPages, setTotalPages] = useState(1);
 
   const location = useLocation();
 
   useEffect(() => {
-    // 한국어: 백엔드에서 1대1 문의 게시글 불러오기
-    // English: Fetch 1:1 inquiry posts from backend
     async function fetchPosts() {
       try {
-        const res = await fetch(`/api/posts?category=support&page=${currentPage}`);
+        setLoading(true);
+        setError(null);
+
+        // limit 포함
+        const res = await fetch(
+          `/api/posts?category=support&page=${currentPage}&limit=${PAGE_LIMIT}`
+        );
         if (!res.ok) throw new Error("서버 응답 실패");
 
         const data = await res.json();
+        const items = Array.isArray(data.items) ? data.items : data;
 
-        // 한국어: 백엔드 데이터를 프론트엔드 형식으로 변환
-        // English: Map backend data into frontend structure
-        const mapped: Post[] = data.items.map((p: any) => ({
+        const mapped: Post[] = items.map((p: any) => ({
           id: p.id,
           category: p.category?.name || "문의",
-          title: p.title,
+          title: p.title ?? "제목 없음",
           author: p.author?.name || "알 수 없음",
-          createdAt: p.createdAt,
-          content: p.content,
+          createdAt: p.createdAt ?? "",
+          content: p.content ?? "",
           image: p.imageUrl,
         }));
 
         setPosts(mapped);
-      } catch (err) {
+
+        // totalPages 계산: 헤더 X-Total-Count 우선, 바디 totalCount 보조, 둘 다 없으면 안전망
+        const headerCount = res.headers.get("X-Total-Count");
+        const totalCount = headerCount
+          ? Number(headerCount)
+          : Number(data.totalCount ?? 0);
+
+        const pages =
+          totalCount > 0
+            ? Math.max(1, Math.ceil(totalCount / PAGE_LIMIT))
+            : Math.max(1, Math.ceil(items.length / PAGE_LIMIT));
+        setTotalPages(pages);
+      } catch (err: any) {
         console.error("1대1 Inquiry 게시판 불러오기 실패:", err);
+        setError(err.message ?? "알 수 없는 오류");
       } finally {
         setLoading(false);
       }
@@ -75,28 +88,51 @@ export default function Support() {
     fetchPosts();
   }, [currentPage]);
 
-  // 한국어: 새로운 글 작성 시 state로 전달된 글 추가
-  // English: Add new post when passed via location.state
+  // 새 글 추가 반영
   useEffect(() => {
-    if (location.state?.newPost) {
-      setPosts((prev) => [location.state.newPost, ...prev]);
+    const state: any = location.state;
+    if (state?.newPost) {
+      const np = state.newPost as Partial<Post>;
+      const normalized: Post = {
+        id: np.id as number,
+        category: np.category ?? "문의",
+        title: np.title ?? "제목 없음",
+        author: np.author ?? "알 수 없음",
+        createdAt: np.createdAt ?? "",
+        content: np.content ?? "",
+        image: np.image,
+      };
+      setPosts((prev) => [normalized, ...prev]);
     }
   }, [location.state]);
 
-  if (loading) return <p>불러오는 중...</p>; // Loading 메시지 / Loading message
+  // 글로벌 로딩 UI 사용
+  if (loading) return <Loading />;
+
+  // PostTable에 넘길 때만 PostRow로 표준화
+  const rows: PostRow[] = posts.map((p) => ({
+    id: p.id,
+    category: p.category,
+    title: p.title,
+    author: p.author,
+    createdAt: p.createdAt,
+    content: p.content,
+    image: p.image,
+  }));
 
   return (
     <section>
       <PostTable
-        posts={posts}
+        posts={rows}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
-        postsPerPage={5}
+        totalPages={totalPages}
         basePath="/support"
         title="Inquiry"
-        showWriteButton={true} // 한국어: 글쓰기 버튼 항상 표시 / English: Always show write button
+        showWriteButton={true}
+        error={error}
       />
-      <Outlet /> {/* 한국어: 상세 페이지 렌더링 / English: Render nested routes (post detail) */}
+      <Outlet />
     </section>
   );
 }

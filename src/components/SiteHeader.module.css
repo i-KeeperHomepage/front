@@ -13,7 +13,12 @@
   padding: 0 16px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between; /* 기본(모바일)에선 flex */
+}
+
+.logoWrap {
+  display: flex;
+  align-items: center;
 }
 
 .logoWrap img {
@@ -96,6 +101,8 @@
 
 .authLink {
   font-size: 14px;
+  padding: 6px 8px;
+  white-space: nowrap; /* 버튼 줄바꿈 방지 */
 }
 
 /* 모바일 햄버거 버튼 */
@@ -190,12 +197,31 @@
 
 /* 반응형 */
 @media (min-width: 768px) {
+  /* 데스크톱: 3열 그리드(1fr auto 1fr)로 중앙 고정 */
+  .site_container {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 0;
+  }
+
+  .logoWrap {
+    justify-self: start;
+  }
+
   .nav {
     display: block;
+    justify-self: center;   /* 항상 중앙 */
   }
 
   .authLinks {
     display: flex;
+    justify-self: end;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    min-height: 40px;       /* 높이 변화 방지 */
+    min-width: 240px;       /* 폭 변화 방지(필요시 260~300으로 조정) */
   }
 
   .mobileMenuBtn {

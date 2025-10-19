@@ -12,7 +12,6 @@ export default function Loading({
   message = "불러오는 중...",
   minHeight,
   inline = false,
-  spinner = true,
   ariaLive = "polite",
 }: LoadingProps) {
   const style: React.CSSProperties = {};
@@ -29,7 +28,6 @@ export default function Loading({
   return (
     <div className="loading-center" role="status" aria-live={ariaLive} style={style}>
       <div>
-        {spinner && <div className="loading-spinner" />}
         <div>{message}</div>
       </div>
     </div>
