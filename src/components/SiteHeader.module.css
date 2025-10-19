@@ -1,3 +1,7 @@
+:root {
+  --header-h: 56px; /* 헤더 높이: 56~64px 선호 */
+}
+
 .siteHeader {
   background: #fff;
   border-bottom: 1px solid #e5e7eb;
@@ -5,10 +9,12 @@
   top: 0;
   z-index: 1000;
   overflow: visible;
+  min-height: var(--header-h);
 }
 
 .site_container {
   max-width: 1280px;
+  height: var(--header-h);
   margin: 0 auto;
   padding: 0 16px;
   display: flex;
@@ -105,34 +111,51 @@
   white-space: nowrap; /* 버튼 줄바꿈 방지 */
 }
 
-/* 모바일 햄버거 버튼 */
+/* 모바일 햄버거/닫기 토글 버튼 */
 .mobileMenuBtn {
   font-size: 20px;
   background: none;
   border: none;
   cursor: pointer;
+  display: inline-flex;       /* 중앙 정렬 */
+  align-items: center;
+  justify-content: center;
+  width: 40px;                /* 터치 타겟 */
+  height: 40px;
+  border-radius: 9999px;      /* 원형 터치 영역 */
+  line-height: 1;
+  z-index: 1100;              /* 오버레이(100)보다 위 */
+}
+
+/* 데스크톱에서 숨김 */
+@media (min-width: 768px) {
+  .mobileMenuBtn {
+    display: none;
+  }
 }
 
 /* 모바일 사이드 메뉴 */
 .sideMenuOverlay {
   position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  top: var(--header-h); 
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.4);
   z-index: 100;
 }
 
 .sideMenu {
   position: fixed;
-  top: 0;
+  top: var(--header-h);             
   right: 0;
   width: 260px;
-  height: 100%;
+  height: calc(100vh - var(--header-h));
   background: #fff;
-  padding: 20px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  overflow-y: auto;
+  overflow-y: auto;  
 }
 
 .slideIn {
@@ -211,7 +234,7 @@
 
   .nav {
     display: block;
-    justify-self: center;   /* 항상 중앙 */
+    justify-self: center;  
   }
 
   .authLinks {
@@ -220,12 +243,13 @@
     justify-content: flex-end;
     align-items: center;
     gap: 12px;
-    min-height: 40px;       /* 높이 변화 방지 */
-    min-width: 240px;       /* 폭 변화 방지(필요시 260~300으로 조정) */
+    min-height: 40px;       
+    min-width: 240px;       
   }
 
   .mobileMenuBtn {
     display: none;
+    z-index: 1100;             
   }
 
   .sideMenuOverlay {
@@ -242,7 +266,6 @@
     position: relative;
     border: none;
     box-shadow: none;
-    margin: 4px 0 8px 0;
     background: transparent;
     text-align: left;
   }
