@@ -48,7 +48,8 @@ export default function ActivityDetail() {
     // English: Fetch post details from backend
     async function fetchPost() {
       try {
-        const res = await fetch(`http://localhost:4000/api/posts/${id}`);
+        // ✅ API_GUIDE 기준: GET /api/posts/{postId}
+        const res = await fetch(`/api/posts/${id}`, { credentials: "include" });
         if (!res.ok) {
           throw new Error("서버 응답 실패");
         }
@@ -64,7 +65,7 @@ export default function ActivityDetail() {
           author_name: data.author?.name || "알 수 없음",
           createAt: data.createdAt || "-",
           content: data.content || "",
-          image: data.imageUrl || "",
+          image: data.files?.[0]?.url || "",
         };
 
         setPost(mappedPost);
@@ -80,10 +81,10 @@ export default function ActivityDetail() {
 
   // 한국어: 게시글을 찾을 수 없을 경우 메시지 출력
   // English: Show message if no post is found
-  if (loading) return <Loading/>;
-  if (!post) return <Loading message="게시글을 찾을 수 없습니다."/>;
+  if (loading) return <Loading />;
+  if (!post) return <Loading message="게시글을 찾을 수 없습니다." />;
 
   // 한국어: PostDetail 컴포넌트를 이용해 상세내용 표시
   // English: Render post details using PostDetail component
-  return <PostDetail/>;
+  return <PostDetail />;
 }

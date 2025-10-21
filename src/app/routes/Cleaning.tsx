@@ -26,24 +26,35 @@ export default function Cleaning() {
   // English: Define table columns (key = data field, label = table header name)
   const columns = [
     { key: "date", label: "날짜" },
-    { key: "userId", label: "이름" },
+    { key: "userName", label: "이름" },
   ];
 
   // 한국어: 실제 표시할 데이터 (현재는 예시 데이터, 추후 백엔드에서 가져올 예정)
   // English: Table data (currently mock data, will be fetched from backend later)
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<{ date: string; userName: string }[]>([]);
 
   // 백엔드 연동
   // 한국어: 나중에 백엔드 서버에서 청소 일정 데이터를 가져오기 위해 사용
   // English: Later, this will fetch cleaning schedule data from backend
-  
   useEffect(() => {
-    fetch("/api/cleaning")
-      .then((res) => res.json())
-      .then((result) => setData(result))
+    fetch("/api/cleanings", { credentials: "include" })
+      .then((res) => {
+        if (!res.ok) throw new Error("서버 응답 오류");
+        return res.json();
+      })
+      .then((result) => {
+        // API 응답 구조를 테이블에 맞게 매핑
+        const mapped = result.map((item: any) => ({
+          date: new Date(item.date).toLocaleDateString("ko-KR"),
+          userName:
+            item.assignedUsers && item.assignedUsers.length > 0
+              ? item.assignedUsers.map((u: any) => u.name).join(", ")
+              : "배정 없음",
+        }));
+        setData(mapped);
+      })
       .catch((err) => console.error("loading fail:", err));
   }, []);
-
 
   // 한국어: DataTable 컴포넌트 호출 (컬럼, 데이터, 제목을 전달)
   // English: Render DataTable component with columns, data, and title

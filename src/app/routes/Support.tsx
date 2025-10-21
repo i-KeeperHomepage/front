@@ -29,6 +29,9 @@ interface Post {
 
 const PAGE_LIMIT = 5;
 
+// 실제 categoryId는 API 가이드에서 1:1 문의에 해당하는 ID로 교체해야 함
+const SUPPORT_CATEGORY_ID = 6;
+
 export default function Support() {
   // 목록 원본 상태
   const [posts, setPosts] = useState<Post[]>([]);
@@ -45,38 +48,30 @@ export default function Support() {
         setLoading(true);
         setError(null);
 
-        // limit 포함
+        // categoryId 기반 요청 (API 가이드 기준)
         const res = await fetch(
-          `/api/posts?category=support&page=${currentPage}&limit=${PAGE_LIMIT}`
+          `/api/posts?categoryId=${SUPPORT_CATEGORY_ID}&page=${currentPage}&limit=${PAGE_LIMIT}`,
+          { credentials: "include" }
         );
         if (!res.ok) throw new Error("서버 응답 실패");
 
         const data = await res.json();
-        const items = Array.isArray(data.items) ? data.items : data;
+        const items = data.posts || [];
 
         const mapped: Post[] = items.map((p: any) => ({
           id: p.id,
           category: p.category?.name || "문의",
           title: p.title ?? "제목 없음",
           author: p.author?.name || "알 수 없음",
-          createdAt: p.createdAt ?? "",
+          createdAt: new Date(p.createdAt).toLocaleDateString("ko-KR"),
           content: p.content ?? "",
-          image: p.imageUrl,
+          image: p.files?.[0]?.url || "",
         }));
 
         setPosts(mapped);
 
-        // totalPages 계산: 헤더 X-Total-Count 우선, 바디 totalCount 보조, 둘 다 없으면 안전망
-        const headerCount = res.headers.get("X-Total-Count");
-        const totalCount = headerCount
-          ? Number(headerCount)
-          : Number(data.totalCount ?? 0);
-
-        const pages =
-          totalCount > 0
-            ? Math.max(1, Math.ceil(totalCount / PAGE_LIMIT))
-            : Math.max(1, Math.ceil(items.length / PAGE_LIMIT));
-        setTotalPages(pages);
+        // pagination.totalPages 사용
+        setTotalPages(data.pagination?.totalPages || 1);
       } catch (err: any) {
         console.error("1대1 Inquiry 게시판 불러오기 실패:", err);
         setError(err.message ?? "알 수 없는 오류");
@@ -128,7 +123,7 @@ export default function Support() {
         setCurrentPage={setCurrentPage}
         totalPages={totalPages}
         basePath="/support"
-        title="Inquiry"
+        title="Support"
         showWriteButton={true}
         error={error}
       />

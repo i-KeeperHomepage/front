@@ -1,4 +1,4 @@
-import SiteHeader from "@/components/SiteHeader";
+import SiteHeader from "@/components/siteHeader/SiteHeader";
 import SiteFooter from "@/components/sitefooter/SiteFooter";
 import Notice from "@/app/routes/Notice";
 

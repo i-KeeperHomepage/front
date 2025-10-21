@@ -51,7 +51,7 @@ export default function Notice() {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  
+
   const location = useLocation();
 
   // 한국어: 로그인한 사용자의 role 확인 (localStorage에서 가져옴)
@@ -66,33 +66,29 @@ export default function Notice() {
         setLoading(true);
         setError(null);
 
-        const res = await fetch(`/api/posts?category=notice&page=${currentPage}`);
+        const res = await fetch(`/api/posts?page=${currentPage}&limit=${PAGE_LIMIT}`, {
+          credentials: "include",
+        });
         if (!res.ok) throw new Error("게시글 요청 실패");
 
         const data = await res.json();
-        const items = Array.isArray(data.items) ? data.items : data;
+        const items = data.posts || [];
 
+        // 데이터 매핑
         const mapped: Post[] = items.map((p: any) => ({
           id: p.id,
           category: p.category?.name || "공지",
           title: p.title || "제목 없음",
           author_name: p.author?.name || "알 수 없음",
-          createAt: p.createdAt || "-",
+          createAt: new Date(p.createdAt).toLocaleDateString("ko-KR"),
           content: p.content || "",
-          image: p.imageUrl || "",
+          image: p.files?.[0]?.url || "",
         }));
 
         setPosts(mapped);
-      // totalPages 계산: 헤더 X-Total-Count 우선, 바디 totalCount 보조, 둘 다 없으면 안전망
-        const headerCount = res.headers.get("X-Total-Count");
-        const totalCount = headerCount
-          ? Number(headerCount)
-          : Number(data.totalCount ?? 0);
 
-        const pages =
-          totalCount > 0
-            ? Math.max(1, Math.ceil(totalCount / PAGE_LIMIT))
-            : Math.max(1, Math.ceil(items.length / PAGE_LIMIT));
+        // pagination.totalPages 기준
+        const pages = data.pagination?.totalPages || 1;
         setTotalPages(pages);
       } catch (err: any) {
         console.error("게시글 불러오기 실패:", err);
@@ -115,9 +111,9 @@ export default function Notice() {
     }
   }, [location.state]);
 
-  if (loading) return <Loading/>;
+  if (loading) return <Loading />;
 
-   // PostTable에 넘길 때만 필드명 표준화(PostRow로 매핑)
+  // PostTable에 넘길 때만 필드명 표준화(PostRow로 매핑)
   const normalizedPosts: PostRow[] = posts.map((p) => ({
     id: p.id,
     category: p.category,
@@ -131,7 +127,7 @@ export default function Notice() {
   return (
     <section>
       <PostTable
-      posts={normalizedPosts}
+        posts={normalizedPosts}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         totalPages={totalPages}

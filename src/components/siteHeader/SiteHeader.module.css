@@ -1,0 +1,224 @@
+:root {
+  --header-h: 56px; /* 헤더 높이 */
+}
+
+/* ===== 헤더 공통 ===== */
+.siteHeader {
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  overflow: visible;
+  min-height: var(--header-h);
+}
+
+.site_container {
+  max-width: 1280px;
+  height: var(--header-h);
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logoWrap { display: flex; align-items: center; }
+.logoImg  { height: 40px; }
+
+.nav   { display: none; overflow: visible; }
+.menu  { display: flex; gap: 24px; list-style: none; }
+
+/* ===== 데스크톱 드롭다운 ===== */
+.dropdown {
+  position: relative;
+  overflow: visible;
+  z-index: 10;
+}
+
+.dropdown_container {
+  cursor: pointer;
+  font-weight: 600;
+  display: inline-block;
+  padding: 8px 12px;
+}
+
+/* 예전 호버 브릿지 제거 */
+.dropdown::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 100%;
+  height: 0;
+}
+
+/* 기본 서브메뉴 박스 */
+.submenu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  list-style: none;
+  min-width: 120px;
+  text-align: center;
+  z-index: 2000;
+  pointer-events: auto;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
+  /* 테두리는 나중에 데스크톱/모바일에서 오버라이드 */
+  border: 1px solid #e5e7eb;
+
+  padding-top: 0;
+  margin-top: 0;
+}
+
+/* 호버 시 표시 */
+.dropdown:hover .submenu,
+.dropdown .submenu:hover { display: block; }
+.dropdown:focus-within .submenu { display: block; }
+
+.submenu li { margin: 6px 0; padding: 6px 12px; cursor: pointer; }
+.submenu li:hover { background: #f5f5f5; }
+
+/* ===== 인증 링크 ===== */
+.authLinks { display: none; gap: 12px; }
+.authLink  { font-size: 14px; padding: 6px 8px; white-space: nowrap; }
+
+/* ===== 모바일 토글 버튼(햄버거/닫기) ===== */
+.mobileMenuBtn {
+  font-size: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  line-height: 1;
+  z-index: 1100;
+}
+
+/* ===== 모바일 사이드 메뉴(헤더 아래에서 시작) ===== */
+.sideMenuOverlay {
+  position: fixed;
+  top: var(--header-h);
+  left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 100;
+}
+
+.sideMenu {
+  position: fixed;
+  top: var(--header-h);
+  right: 0;
+  width: 260px;
+  height: calc(100vh - var(--header-h));
+  background: #fff;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.slideIn  { animation: slideIn 0.3s forwards; }
+.slideOut { animation: slideOut 0.3s forwards; }
+
+@keyframes slideIn  { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes slideOut { from { transform: translateX(0); } to { transform: translateX(100%); } }
+
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  align-self: flex-end;
+  cursor: pointer;
+}
+
+.sideNav       { display: flex; flex-direction: column; gap: 12px; }
+.sideDropdown  { display: flex; flex-direction: column; }
+.dropdownLabel { font-weight: 600; margin-bottom: 4px; }
+
+.sideAuth {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sideAuth a,
+.sideAuth button {
+  display: block;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 4px 0;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* ===== 데스크톱 레이아웃 고정(로고-메뉴-버튼) ===== */
+@media (min-width: 768px) {
+  .site_container {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 0;
+  }
+  .logoWrap { justify-self: start; }
+  .nav      { display: block; justify-self: center; }
+  .authLinks{
+    display: flex;
+    justify-self: end;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    min-height: 40px;
+    min-width: 240px;
+  }
+  .mobileMenuBtn   { display: none; }
+  .sideMenuOverlay { display: none; }
+
+  /* 여기서 서브메뉴를 헤더 선에 딱 맞춤 */
+  .submenu {
+    /* li의 아래에 붙이고, 헤더의 1px 보더와 시각적으로 이어지게 -1px 당김 */
+    top: 100%;
+    margin-top: 8px; /* 헤더 border-bottom(1px)과 정확히 맞물림 */
+    /* 서브메뉴 상단 보더를 유지해 한 줄처럼 보이게 */
+    border-top: 1px solid #e5e7eb;
+    border-right: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+    border-left: 1px solid #e5e7eb;
+  }
+
+  /* 간격을 만들던 브릿지 제거 */
+  .dropdown::after { height: 8px; }
+  .submenu::before { display: none; }
+}
+
+/* ===== 모바일: 드롭다운을 단순 리스트로 표시 ===== */
+@media (max-width: 767px) {
+  .submenu {
+    display: flex !important;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    top: 0;
+    left: 0;
+    transform: none;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    text-align: left;
+  }
+  .submenu li { margin: 0; font-size: 14px; font-weight: normal; }
+
+  .dropdownLabel,
+  .dropdown_container { font-size: 16px; font-weight: bold; margin-bottom: 4px; }
+
+  .sideNav  { display: flex; flex-direction: column; gap: 16px; }
+  .sideAuth { margin-top: auto; }
+}

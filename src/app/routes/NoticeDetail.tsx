@@ -50,7 +50,7 @@ export default function NoticeDetail() {
     // English: Fetch post detail from backend
     async function fetchPost() {
       try {
-        const res = await fetch(`/api/posts/${id}`);
+        const res = await fetch(`/api/posts/${id}`, { credentials: "include" });
         if (!res.ok) throw new Error("서버 응답 실패");
 
         const data = await res.json();
@@ -62,9 +62,9 @@ export default function NoticeDetail() {
           category: data.category?.name || "공지",
           title: data.title || "제목 없음",
           author_name: data.author?.name || "알 수 없음",
-          createAt: data.createdAt || "-",
+          createAt: new Date(data.createdAt).toLocaleDateString("ko-KR"),
           content: data.content || "",
-          image: data.imageUrl || "",
+          image: data.files?.[0]?.url || "",
         };
 
         setPost(mappedPost);
@@ -82,11 +82,11 @@ export default function NoticeDetail() {
   // ==========================
   // 상태별 렌더링
   // ==========================
-  if (loading) return <Loading/>;
+  if (loading) return <Loading />;
   if (error) return <p>{error}</p>;
-  if (!post) return <Loading message="게시글을 찾을 수 없습니다."/>;
+  if (!post) return <Loading message="게시글을 찾을 수 없습니다." />;
 
   // 한국어: 게시글이 있으면 PostDetail 렌더링
   // English: Render PostDetail when post exists
-  return <PostDetail/>;
+  return <PostDetail />;
 }

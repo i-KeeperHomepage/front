@@ -48,7 +48,7 @@ export default function SiteHeader() {
     };
   }, []);
 
-  // ESC 키로 사이드 메뉴 닫기 (모바일 UX 향상)
+  // ESC 키로 사이드 메뉴 닫기
   const escHandler = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape") setOpen(false);
   }, []);
@@ -56,6 +56,17 @@ export default function SiteHeader() {
     if (open) window.addEventListener("keydown", escHandler);
     return () => window.removeEventListener("keydown", escHandler);
   }, [open, escHandler]);
+
+  // 모바일 메뉴 열릴 때 바디 스크롤 잠금
+  useEffect(() => {
+    if (open) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+  }, [open]);
 
   // 로그아웃 처리
   const handleLogout = () => {

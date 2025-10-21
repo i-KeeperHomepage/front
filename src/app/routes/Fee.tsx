@@ -25,26 +25,37 @@ export default function Fee() {
   // 한국어: 테이블의 컬럼 정의 (key는 데이터의 속성명, label은 테이블 헤더에 표시될 이름)
   // English: Define table columns (key = data field, label = table header name)
   const columns = [
-    { key: "userId", label: "이름" },
+    { key: "userName", label: "이름" },
     { key: "amount", label: "금액" },
-    { key: "year", label: "연도" },
+    { key: "type", label: "유형" },
     { key: "date", label: "날짜" },
-    { key: "status", label: "내역" },
-    { key: "paidAt", label: "납부일시" },
+    { key: "description", label: "내역" },
   ];
 
   // 한국어: 예시 데이터 (나중에 백엔드 API 연동 시 교체 예정)
   // English: Example data (to be replaced with backend API later)
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<{ userName: string; amount: number; type: string; date: string; description: string }[]>([]);
 
   // 백엔드 연동 
   // 한국어: 나중에 백엔드 서버에서 회비 납부 데이터를 가져오기 위해 사용
   // English: Later, this will fetch fee payment data from the backend
-  
   useEffect(() => {
-    fetch("/api/fees")
-      .then((res) => res.json())
-      .then((result) => setData(result))
+    fetch("/api/fees", { credentials: "include" })
+      .then((res) => {
+        if (!res.ok) throw new Error("서버 응답 오류");
+        return res.json();
+      })
+      .then((result) => {
+        // 실제 응답 구조에 따라 매핑
+        const mapped = (result.fees || []).map((f: any) => ({
+          userName: f.user?.name || "알 수 없음",
+          amount: f.amount,
+          type: f.type === "deposit" ? "입금" : "출금",
+          date: new Date(f.date).toLocaleDateString("ko-KR"),
+          description: f.description || "-",
+        }));
+        setData(mapped);
+      })
       .catch((err) => console.error("loading fail:", err));
   }, []);
 

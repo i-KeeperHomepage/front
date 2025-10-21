@@ -43,9 +43,19 @@ export default function OfficerPage() {
   useEffect(() => {
     // 한국어: 나중에 백엔드와 연결될 fetch API (현재 주석 처리됨)
     // English: Backend fetch API (commented out for now)
-    fetch("/api/members")
+    fetch("/api/admin/users", { credentials: "include" })
       .then((res) => res.json())
-      .then((data) => setMembers(data))
+      .then((data) => {
+        const mapped = data.users.map((u: any) => ({
+          id: u.id,
+          name: u.name,
+          studentId: u.studentId ?? "-",
+          major: u.major ?? "-",
+          email: u.email,
+          role: u.role?.name || "member",
+        }));
+        setMembers(mapped);
+      })
       .catch(console.error);
   }, []);
 

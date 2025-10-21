@@ -28,9 +28,14 @@
 //    - backend: call fetch("/api/login") for server authentication
 // 4. On success, store token and role in localStorage, dispatch a login event, then navigate to home
 
+// - 엔드포인트: POST /api/auth/login
+// - 응답: { message, user, accessToken }
+// - 성공 시: accessToken, role(localStorage 저장), login 이벤트 발행
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Auth.module.css";
+import { loginApi } from "@/api/api";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -42,17 +47,20 @@ export default function Login() {
     password: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   // 한국어: 입력값 변경 처리
   // English: Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((s) => ({ ...s, [name]: value }));
   };
 
   // 한국어: 로그인 버튼 클릭 시 실행
   // English: Execute when login button is clicked
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     // 한국어: 데모 로그인 먼저 처리
     // English: Handle demo login first
@@ -66,44 +74,19 @@ export default function Login() {
       navigate("/");
       return;
     }
-
-    if (formData.email === "user@user.com" && formData.password === "user") {
-      localStorage.setItem("token", "test-user-token");
-      localStorage.setItem("role", "member");
-      window.dispatchEvent(new Event("login"));
-      navigate("/");
-      return;
-    }
-
     // 한국어: 데모 계정이 아니면 백엔드 로그인 시도
     // English:  If not a demo account, try backend authentication
     try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      // 한국어: 서버 인증 실패 시 사용자에게 안내
-      // English: Inform the user if server authentication fails
-      if (!res.ok) {
-        alert("로그인 실패: 이메일 또는 비밀번호가 올바르지 않습니다.");
-        return;
-      }
-
-      const data = await res.json();
-
-      // 한국어: 서버에서 받은 토큰과 역할 저장
-      // English: Store token and role from server response
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("role", data.role);
+      const data = await loginApi(formData.email, formData.password);
+      // accessToken/role 저장
+      localStorage.setItem("token", data.accessToken || "");
+      localStorage.setItem("role", data.user?.role || "member");
       window.dispatchEvent(new Event("login"));
       navigate("/");
-    } catch (error) {
-      // 한국어: 네트워크 또는 서버 오류 처리
-      // English: Handle network or server errors
-      console.error("로그인 요청 실패:", error);
-      alert("서버 연결 중 오류가 발생했습니다.");
+    } catch (err: any) {
+      alert(err.message || "로그인 실패");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -135,7 +118,9 @@ export default function Login() {
 
         {/* 한국어: 로그인 버튼 */}
         {/* English: Login button */}
-        <button type="submit">로그인</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "로그인 중" : "로그인"}
+        </button>
       </form>
     </section>
   );

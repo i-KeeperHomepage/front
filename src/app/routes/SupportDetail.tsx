@@ -21,6 +21,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PostDetail from "@/components/postDetail/PostDetail";
+import Loading from "@/components/common/Loading";
 
 // 게시글 타입 정의 / Define post type
 interface Post {
@@ -73,11 +74,11 @@ export default function SupportDetail() {
   }, [id]);
 
   // 한국어: 로딩 상태 처리 / English: Handle loading state
-  if (loading) return <p>불러오는 중...</p>;
+  if (loading) return <Loading/>;
 
   // 한국어: 게시글이 없을 경우 메시지 출력 / English: Show message if no post found
-  if (!post) return <p>게시글을 찾을 수 없습니다.</p>;
+  if (!post) return <Loading message="게시글을 찾을 수 없습니다."/>;
 
   // 한국어: 게시글이 있으면 PostDetail로 렌더링 / English: Render with PostDetail if found
-  return <PostDetail post={post} />;
+  return <PostDetail/>;
 }

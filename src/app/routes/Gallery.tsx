@@ -33,9 +33,24 @@ export default function Gallery() {
   const [items, setItems] = useState<GalleryItem[]>([]);
 
   useEffect(() => {
-    fetch("/api/gallery")
-      .then((res) => res.json())
-      .then((result) => setItems(result))
+    // 한국어: 백엔드에서 파일 목록을 가져와 갤러리 형식으로 매핑
+    // English: Fetch file list from backend and map to gallery format
+    fetch("/api/files", { credentials: "include" })
+      .then((res) => {
+        if (!res.ok) throw new Error("서버 응답 실패");
+        return res.json();
+      })
+      .then((result) => {
+        // API 구조에 따라 파일 데이터 매핑
+        const mapped: GalleryItem[] = result
+          .filter((f: any) => f.mimeType.startsWith("image/")) // 이미지 파일만
+          .map((f: any) => ({
+            imageUrl: `/api/files/${f.id}/download`,
+            title: f.originalName || "제목 없음",
+            description: f.uploader?.name || "업로더 정보 없음",
+          }));
+        setItems(mapped);
+      })
       .catch((err) => console.error("갤러리 데이터 불러오기 실패:", err));
   }, []);
 

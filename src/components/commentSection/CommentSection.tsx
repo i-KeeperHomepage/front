@@ -133,7 +133,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
   // ==============================
   const handleDelete = async (id: number) => {
     try {
-      const res = await fetch(`/api/comments/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/posts/${postId}/comments/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("댓글 삭제 실패");
 
       setComments(comments.filter((c) => c.id !== id));
@@ -159,8 +159,8 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     if (!newText) return;
 
     try {
-      const res = await fetch(`/api/comments/${id}`, {
-        method: "PUT",
+      const res = await fetch(`/api/posts/${postId}/comments/${id}`, {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: newText }),
       });

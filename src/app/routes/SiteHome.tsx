@@ -69,7 +69,7 @@ export default function SiteHome() {
     })();
   }, [currentPage]);
 
-  if (loading) return <Loading message="불러오는 중..." />;
+  if (loading) return <Loading />;
 
   return (
     <section className={`site-container ${styles.home}`}>

@@ -23,6 +23,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import CommentSection from "@/components/commentSection/CommentSection";
 import styles from "./PostDetail.module.css";
+import Loading from "../common/Loading";
 
 // ==============================
 // Post 타입 정의
@@ -91,9 +92,9 @@ export default function PostDetail() {
   // ==============================
   // 로딩 / 에러 처리
   // ==============================
-  if (loading) return <p>게시글을 불러오는 중...</p>;
+  if (loading) return <Loading/>;
   if (error) return <p>오류 발생: {error}</p>;
-  if (!post) return <p>게시글을 찾을 수 없습니다.</p>;
+  if (!post) return  <Loading message="게시글을 찾을 수 없습니다."/>
 
   // ==============================
   // 렌더링 영역
