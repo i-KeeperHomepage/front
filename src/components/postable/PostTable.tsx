@@ -1,8 +1,8 @@
 // ==============================
-// PostTable.tsx (프리젠테이셔널 + 글로벌 Loading 사용 / postsPerPage 제거)
+// PostTable.tsx (프리젠테이셔널 + 글로벌 Loading 사용)
 // ==============================
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./PostTable.module.css";
 import { FaPen } from "react-icons/fa";
@@ -20,7 +20,7 @@ export interface PostRow {
   image?: string;
 }
 
-// 컴포넌트 Props (postsPerPage 제거)
+// 컴포넌트 Props
 export interface PostTableProps {
   posts: PostRow[];
   currentPage: number;
@@ -47,6 +47,14 @@ export default function PostTable({
   emptyMessage = "등록된 게시글이 없습니다.",
 }: PostTableProps) {
   // 로딩 / 에러
+
+  // ✅ 로그인 상태 확인 (localStorage의 token 기준)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, []);
   if (loading) {
     return (
       <div className={styles.wrapper}>
@@ -84,11 +92,12 @@ export default function PostTable({
       {/* 헤더 */}
       <div className={styles.headerRow}>
         <h2 className={styles.title}>{title}</h2>
-        {showWriteButton && (
+        {showWriteButton && isLoggedIn && (
           <Link to={`${basePath}/write`} className={styles.writeBtn} aria-label="글쓰기">
             <FaPen />
           </Link>
         )}
+
       </div>
 
       {/* 테이블 / 빈 상태 */}

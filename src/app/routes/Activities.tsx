@@ -45,13 +45,14 @@ export default function Activities() {
       try {
         setLoading(true);
 
-        const res = await fetch(
-          `/api/posts?category=activities&page=${currentPage}&limit=${PAGE_LIMIT}`
-        );
+        // API 가이드 기준: GET /api/posts?page=&limit=
+        const res = await fetch(`/api/posts?page=${currentPage}&limit=${PAGE_LIMIT}`, {
+          credentials: "include",
+        });
         if (!res.ok) throw new Error("Failed to fetch posts");
 
         const data = await res.json();
-        const items = Array.isArray(data.items) ? data.items : data;
+        const items = data.posts || []; 
 
         const mapped: Post[] = items.map((p: any) => ({
           id: p.id,
@@ -60,21 +61,13 @@ export default function Activities() {
           author_name: p.author?.name || "알 수 없음",
           createAt: p.createdAt || "-",
           content: p.content || "",
-          image: p.imageUrl || "",
+          image: p.files?.[0]?.url || "",
         }));
 
         setPosts(mapped);
 
-        // totalPages 계산: 헤더 X-Total-Count 우선, 없으면 바디 totalCount 사용, 둘 다 없으면 안전망
-        const headerCount = res.headers.get("X-Total-Count");
-        const totalCount = headerCount
-          ? Number(headerCount)
-          : Number(data.totalCount ?? 0);
-
-        const pages =
-          totalCount > 0
-            ? Math.max(1, Math.ceil(totalCount / PAGE_LIMIT))
-            : Math.max(1, Math.ceil(items.length / PAGE_LIMIT));
+        // totalPages 계산: API 응답의 pagination.totalPages 기준
+        const pages = data.pagination?.totalPages || 1;
         setTotalPages(pages);
       } catch (err) {
         console.error("게시글 불러오기 실패:", err);
@@ -95,7 +88,7 @@ export default function Activities() {
     }
   }, [location.state]);
 
-  if (loading) return <Loading/>;
+  if (loading) return <Loading />;
 
   // PostTable에 넘길 때만 필드명 표준화
   const normalizedPosts: PostRow[] = posts.map((p) => ({

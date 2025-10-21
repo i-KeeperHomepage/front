@@ -11,7 +11,7 @@
 // 1. 로그인 여부 확인 (localStorage의 token 검사)
 // 2. 회원 프로필 표시 (이름, 학번, 전공, 이메일, 학년/학차, 사인 이미지)
 // 3. 사용자가 작성한 글 목록 표시 (카테고리, 제목, 작성일)
-// 4. 백엔드 연결 시 fetch("/api/mypage")를 통해 실제 데이터 불러오기
+// 4. 백엔드 연결 시 fetch("/api/users/me") 및 fetch("/api/users/me/posts")를 통해 실제 데이터 불러오기
 //
 // English Explanation:
 // This component displays the My Page of a logged-in user.
@@ -22,7 +22,7 @@
 // 1. Check login status (validate token in localStorage)
 // 2. Display user profile (name, studentId, major, email, year, signature image)
 // 3. Display user-authored posts (category, title, created date)
-// 4. On backend integration, fetch("/api/mypage") to retrieve real data
+// 4. On backend integration, fetch("/api/users/me") and fetch("/api/users/me/posts") to retrieve real data
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -68,33 +68,39 @@ export default function MyPage() {
     // English: Fetch user profile and authored posts from backend
     async function fetchMyPage() {
       try {
-        const res = await fetch("/api/mypage", {
+        // 사용자 정보 가져오기
+        const userRes = await fetch("/api/users/me", {
+          credentials: "include",
           headers: { Authorization: `Bearer ${token}` },
         });
+        if (!userRes.ok) throw new Error("사용자 정보 불러오기 실패");
+        const userData = await userRes.json();
 
-        if (!res.ok) {
-          throw new Error("마이페이지 불러오기 실패");
-        }
-
-        const data = await res.json();
+        // 사용자 게시글 가져오기
+        const postRes = await fetch("/api/users/me/posts", {
+          credentials: "include",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!postRes.ok) throw new Error("게시글 불러오기 실패");
+        const postData = await postRes.json();
 
         // 한국어: 백엔드 응답 구조에 따라 데이터 매핑
         // English: Map backend response to frontend structure
         const mappedUser: UserProfile = {
-          name: data.user?.name || "이름 없음",
-          studentId: data.user?.studentId || "-",
-          major: data.user?.major || "-",
-          email: data.user?.email || "-",
-          year: data.user?.year || "-",
-          fileUrl: data.user?.fileUrl || "",
+          name: userData.name || "이름 없음",
+          studentId: userData.studentId || "-",
+          major: userData.major || "-",
+          email: userData.email || "-",
+          year: userData.year || "-",
+          fileUrl: userData.signatureFile?.url || "",
         };
 
-        const mappedPosts: UserPost[] = Array.isArray(data.posts)
-          ? data.posts.map((p: any) => ({
+        const mappedPosts: UserPost[] = Array.isArray(postData)
+          ? postData.map((p: any) => ({
               id: p.id,
               category: p.category?.name || "기타",
               title: p.title || "제목 없음",
-              createAt: p.createdAt || "-",
+              createAt: new Date(p.createdAt).toLocaleDateString("ko-KR"),
             }))
           : [];
 
@@ -111,8 +117,8 @@ export default function MyPage() {
     fetchMyPage();
   }, [navigate]);
 
-  if (loading) return <Loading/>;
-  if (!user) return <Loading message="회원 정보를 불러올 수 없습니다"/>;
+  if (loading) return <Loading />;
+  if (!user) return <Loading message="회원 정보를 불러올 수 없습니다" />;
 
   return (
     <section className={`site-container ${styles.mypage}`}>

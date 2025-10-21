@@ -18,9 +18,16 @@
 // After email verification, a FormData POST request is sent to `/api/register`.
 // On success, the user is redirected to the login page.
 
+// - 엔드포인트: POST /api/auth/register
+// - 요청: { email, password, name, major, class }
+// - 가이드는 이메일 인증 엔드포인트를 제공하지 않으므로(별도 문서 없을 때)
+//   이메일 인증 UI는 잠시 비활성화하고 바로 register 호출.
+// - 가입 성공 시: "관리자 승인 대기" 메시지 후 로그인 페이지로 이동.
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Auth.module.css";
+//import { registerApi } from "@/api/api";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -105,7 +112,7 @@ export default function Register() {
         if (value) data.append(key, value as Blob);
       });
 
-      const res = await fetch("/api/register", {
+      const res = await fetch("/api/auth/register", {
         method: "POST",
         body: data,
       });

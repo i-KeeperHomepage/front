@@ -22,6 +22,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PostDetail from "@/components/postDetail/PostDetail";
+import Loading from "@/components/common/Loading";
 
 interface Post {
   id: number;
@@ -49,7 +50,7 @@ export default function ReferenceDetail() {
     // English: Fetch post data from backend API
     async function fetchPost() {
       try {
-        const res = await fetch(`/api/posts/${id}`);
+        const res = await fetch(`/api/posts/${id}`, { credentials: "include" });
         if (!res.ok) throw new Error("서버 응답 실패");
 
         const data = await res.json();
@@ -61,9 +62,9 @@ export default function ReferenceDetail() {
           category: data.category?.name || "자료실",
           title: data.title || "제목 없음",
           author_name: data.author?.name || "알 수 없음",
-          createAt: data.createdAt || "-",
+          createAt: new Date(data.createdAt).toLocaleDateString("ko-KR"),
           content: data.content || "",
-          image: data.imageUrl || "",
+          image: data.files?.[0]?.url || "",
         };
 
         setPost(mapped);
@@ -79,11 +80,11 @@ export default function ReferenceDetail() {
   }, [id]);
 
   // 상태별 출력 처리
-  if (loading) return <p>불러오는 중...</p>;
+  if (loading) return <Loading/>;
   if (error) return <p>{error}</p>;
-  if (!post) return <p>게시글을 찾을 수 없습니다.</p>;
+  if (!post) return <Loading message="게시글을 찾을 수 없습니다."/>;
 
   // 한국어: PostDetail 컴포넌트로 게시글 렌더링
   // English: Render the post with PostDetail component
-  return <PostDetail post={post} />;
+  return <PostDetail/>;
 }

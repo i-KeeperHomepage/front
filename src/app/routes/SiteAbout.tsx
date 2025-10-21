@@ -143,7 +143,7 @@ export default function SiteAbout() {
       {/* 한국어: 지도 + 주소 / English: Map + Address */}
       <div className={styles.mapSection}>
         {/* 한국어: 카카오맵 컴포넌트 / English: Kakao Map component */}
-        <KakaoMap lat={35.9135} lng={128.8091} level={3} />
+        <KakaoMap lat={35.913655} lng={128.802581} level={3} />
         <div className={styles.address}>
           <h4>i-Keeper</h4>
           <p>경북 경산시 하양읍 하양로 13-13</p>

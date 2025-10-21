@@ -100,7 +100,7 @@ export default function ClubCalendar() {
         const data = await res.json();
 
         // 백엔드 데이터를 ClubEvent 형식으로 매핑
-        const mapped: ClubEvent[] = data.map((e: any) => ({
+        const mapped: ClubEvent[] = (data.events || []).map((e: any) => ({
           id: e.id,
           title: e.title,
           startDate: e.startDate,

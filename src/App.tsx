@@ -54,7 +54,7 @@ const router = createBrowserRouter([
         ),
       },
 
-      // Notice
+      // Notice (categoryId = 1)
       { path: "notice", element: <Notice /> },
       {
         path: "notice/write",
@@ -62,13 +62,13 @@ const router = createBrowserRouter([
           <PostForm
             categoryOptions={["공지"]}
             basePath="/notice"
-            apiEndpoint="/api/posts"
+            apiEndpoint="/api/posts?categoryId=1"
           />
         ),
       },
       { path: "notice/:id", element: <NoticeDetail /> },
 
-      // Activities
+      // Activities (categoryId = 2)
       { path: "activities", element: <Activities /> },
       {
         path: "activities/write",
@@ -76,50 +76,58 @@ const router = createBrowserRouter([
           <PostForm
             categoryOptions={["팀빌딩"]}
             basePath="/activities"
-            apiEndpoint="/api/posts"
+            apiEndpoint="/api/posts?categoryId=2"
           />
         ),
       },
       { path: "activities/:id", element: <ActivityDetail /> },
 
-      // Reference
+      // Reference (세미나, 특강 등)
       { path: "seminar", element: <Reference /> },
+
+      // Keeper Seminar (categoryId = 3)
       {
         path: "seminar/KeeperSeminar/write",
         element: (
           <PostForm
             categoryOptions={["Keeper 세미나"]}
             basePath="/seminar/KeeperSeminar"
-            apiEndpoint="/api/posts"
+            apiEndpoint="/api/posts?categoryId=3"
           />
         ),
       },
       { path: "seminar/KeeperSeminar/:id", element: <ReferenceDetail /> },
+
+      // Info Sharing Seminar (categoryId = 4)
       {
         path: "seminar/seminar/write",
         element: (
           <PostForm
             categoryOptions={["정보공유세미나"]}
             basePath="/seminar/seminar"
-            apiEndpoint="/api/posts"
+            apiEndpoint="/api/posts?categoryId=4"
           />
         ),
       },
       { path: "seminar/seminar/:id", element: <ReferenceDetail /> },
+
+      // Special Lecture (categoryId = 5)
       {
         path: "seminar/special/write",
         element: (
           <PostForm
             categoryOptions={["특강"]}
             basePath="/seminar/special"
-            apiEndpoint="/api/posts"
+            apiEndpoint="/api/posts?categoryId=5"
           />
         ),
       },
       { path: "seminar/special/:id", element: <ReferenceDetail /> },
 
-      // ETC
+      // Gallery (파일 관리 API 사용)
       { path: "gallery", element: <Gallery /> },
+
+      // Support (1:1 문의, categoryId = 6)
       { path: "support", element: <Support /> },
       {
         path: "support/write",
@@ -127,11 +135,13 @@ const router = createBrowserRouter([
           <PostForm
             categoryOptions={["Inquiry"]}
             basePath="/support"
-            apiEndpoint="/api/posts"
+            apiEndpoint="/api/posts?categoryId=6"
           />
         ),
       },
       { path: "support/:id", element: <SupportDetail /> },
+
+      // 기타 기능 페이지
       { path: "library", element: <Library /> },
       { path: "fee", element: <Fee /> },
       { path: "cleaning", element: <Cleaning /> },

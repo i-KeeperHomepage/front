@@ -1,4 +1,4 @@
-import SiteHeader from "@/components/SiteHeader";
+import SiteHeader from "@/components/siteHeader/SiteHeader";
 import SiteFooter from "@/components/sitefooter/SiteFooter";
 import Support from "@/app/routes/Support";
 
