@@ -19,6 +19,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import type { EventInput } from "@fullcalendar/core";
 import koLocale from "@fullcalendar/core/locales/ko";
 import styles from "./ClubCalendar.module.css";
+import Loading from "../common/Loading";
 
 // ==============================
 // 일정(Event) 타입 정의 / Define Event type
@@ -150,7 +151,7 @@ export default function ClubCalendar() {
     });
   }, [holidays]);
 
-  if (loading) return <p>일정 불러오는 중...</p>;
+  if (loading) return <Loading message="일정 불러오는 중..."/>;
 
   return (
     <div className={styles.calendarWrap}>

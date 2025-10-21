@@ -31,52 +31,23 @@
   text-align: center;
 }
 
-/* ===== 임원진 카드 레이아웃 (일반화된 4열 기본) ===== */
+/* ===== 임원진 카드 레이아웃 ===== */
 .members {
   display: flex;
   flex-wrap: wrap;
   gap: 24px;
   margin-bottom: 48px;
-  justify-content: flex-start; /* 기본 왼쪽 정렬 */
+  justify-content: flex-start;
 }
 
-/* 한 줄에 4개 (데스크톱 기본)
-   행의 gap이 3개이므로: (100% - 24px*3) / 4 = (100% - 72px) / 4 */
 .card {
   background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   padding: 16px;
   text-align: center;
-
   flex: 0 1 calc((100% - 72px) / 4);
   max-width: calc((100% - 72px) / 4);
-}
-
-/* ----- 마지막 줄 자동 가운데 정렬 (4열 기준) -----
-   남은 1개: 한가운데
-   남은 2개: 가운데 쌍
-   남은 3개: 좌/우만 자동 여백으로 가운데 정렬 느낌 */
-@media (min-width: 1024px) {
-  /* 1개 남음: 마지막 카드가 4n+1 위치 */
-  .members > .card:last-child:nth-child(4n + 1) {
-    margin-left: auto;
-    margin-right: auto;
-  }
-  /* 2개 남음: 첫 카드(4n+1)는 왼쪽 자동, 마지막(4n+2)은 오른쪽 자동 */
-  .members > .card:nth-last-child(2):nth-child(4n + 1) {
-    margin-left: auto;
-  }
-  .members > .card:last-child:nth-child(4n + 2) {
-    margin-right: auto;
-  }
-  /* 3개 남음: 첫 카드(4n+1)는 왼쪽 자동, 마지막(4n+3)은 오른쪽 자동 */
-  .members > .card:nth-last-child(3):nth-child(4n + 1) {
-    margin-left: auto;
-  }
-  .members > .card:last-child:nth-child(4n + 3) {
-    margin-right: auto;
-  }
 }
 
 .memberImg {
@@ -99,57 +70,75 @@
   color: #475569;
 }
 
-/* 역할 텍스트가 있다면 선택적으로 스타일 */
-.memberRole {
-  margin-top: 4px;
-  font-size: 14px;
-  color: #334155;
+/* ============================= */
+/* 지도 섹션 (지도 60% / 주소 40%) */
+/* ============================= */
+.mapSection {
+  display: flex;
+  flex-direction: row;       /* ✅ 가로 정렬 고정 */
+  flex-wrap: nowrap;         /* ✅ 줄바꿈 금지 */
+  align-items: stretch;      /* 높이 동일 */
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  margin-top: 40px;
+  box-sizing: border-box;
+}
+
+/* 지도 영역 */
+.mapContainer {
+  flex: 0 1 60%;             /* ✅ 지도 영역 60% */
+  height: 450px;
+  min-width: 500px;
+  display: flex;
+}
+
+/* 주소 영역 */
+.address {
+  flex: 0 1 40%;             /* ✅ 주소 영역 40% */
+  background-color: #000;
+  border-radius: 12px;
+  padding: 32px;
+  color: #f2f2f2;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: auto;
+}
+
+.address h4 {
+  margin-bottom: 16px;
+  font-size: 1.4rem;
   font-weight: 600;
 }
 
-/* 지도 섹션 */
-.mapSection {
-  display: flex;
-  gap: 24px;
-  flex-wrap: wrap;
-  align-items: flex-start;
-}
-
-.address {
-  flex: 1;
-  min-width: 200px;
-  height: 320px;
-  background: #000;
-  color: #fff;
-  padding: 20px;
-  border-radius: 12px;
+.address p {
+  margin: 6px 0;
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 /* ===== 반응형 ===== */
-
-/* 태블릿: 3열
-   행 gap이 2개: (100% - 24px*2) / 3 = (100% - 48px) / 3 */
 @media (max-width: 1023px) and (min-width: 768px) {
-  .card {
-    flex: 0 1 calc((100% - 48px) / 3);
-    max-width: calc((100% - 48px) / 3);
+  .mapSection {
+    flex-wrap: wrap;
   }
 
-  /* ----- 마지막 줄 자동 가운데 정렬 (3열 기준) -----
-     남은 1개: 중앙, 남은 2개: 가운데 쌍 */
-  .members > .card:last-child:nth-child(3n + 1) {
-    margin-left: auto;
-    margin-right: auto;
+  .mapContainer {
+    flex: 1 1 100%;
+    height: 350px;
+    min-width: auto;
   }
-  .members > .card:nth-last-child(2):nth-child(3n + 1) {
-    margin-left: auto;
-  }
-  .members > .card:last-child:nth-child(3n + 2) {
-    margin-right: auto;
+
+  .address {
+    flex: 1 1 100%;
+    height: auto;
+    margin-top: 20px;
   }
 }
 
-/* 모바일: 1열 */
 @media (max-width: 767px) {
   .intro {
     flex-direction: column;
@@ -159,5 +148,23 @@
   .card {
     flex: 1 1 100%;
     max-width: 100%;
+  }
+
+  .mapSection {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .mapContainer {
+    flex: none;
+    width: 90%;
+    height: 300px;
+  }
+
+  .address {
+    flex: none;
+    width: 90%;
+    margin-top: 20px;
+    text-align: left;
   }
 }
