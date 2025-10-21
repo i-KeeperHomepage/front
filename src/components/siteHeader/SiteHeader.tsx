@@ -14,13 +14,14 @@
 // - On desktop, dropdown menus are used; on mobile, a hamburger button opens the side menu.
 // - Login status is determined via the `token` stored in localStorage, and reacts to login/logout events.
 
-import { NavLink, useNavigate, Link } from "react-router-dom";
+import { NavLink, useNavigate, Link, useLocation } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import styles from "./SiteHeader.module.css";
 import cn from "classnames";
 
 export default function SiteHeader() {
   const navigate = useNavigate();
+  const location = useLocation(); 
   const [open, setOpen] = useState(false); // 모바일 메뉴 열림 여부
 
   // 로그인 여부 상태
@@ -29,6 +30,11 @@ export default function SiteHeader() {
 
   // hover 상태 관리 (각 dropdown별)
   const [hoverDropdown, setHoverDropdown] = useState<string | null>(null);
+
+  // 페이지 이동 시 서브메뉴 자동 닫기
+  useEffect(() => {
+    setHoverDropdown(null);
+  }, [location]);
 
   // 로그인 상태 확인
   useEffect(() => {

@@ -48,7 +48,7 @@ export default function PostTable({
 }: PostTableProps) {
   // 로딩 / 에러
 
-  // ✅ 로그인 상태 확인 (localStorage의 token 기준)
+  // 로그인 상태 확인 (localStorage의 token 기준)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -60,7 +60,7 @@ export default function PostTable({
       <div className={styles.wrapper}>
         <div className={styles.headerRow}>
           <h2 className={styles.title}>{title}</h2>
-          {showWriteButton && (
+          {showWriteButton && isLoggedIn && (
             <Link to={`${basePath}/write`} className={styles.writeBtn} aria-label="글쓰기">
               <FaPen />
             </Link>
@@ -76,7 +76,7 @@ export default function PostTable({
       <div className={styles.wrapper}>
         <div className={styles.headerRow}>
           <h2 className={styles.title}>{title}</h2>
-          {showWriteButton && (
+          {showWriteButton && isLoggedIn && (
             <Link to={`${basePath}/write`} className={styles.writeBtn} aria-label="글쓰기">
               <FaPen />
             </Link>
