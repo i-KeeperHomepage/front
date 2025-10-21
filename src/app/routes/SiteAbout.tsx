@@ -25,7 +25,7 @@ export default function SiteAbout() {
   const members = [
     {
       name: "은은솔",
-      title: "회장", 
+      title: "회장",
       info: "(3학년, 컴퓨터공학전공)",
       desc: (
         <>
@@ -38,12 +38,12 @@ export default function SiteAbout() {
     },
     {
       name: "김시은",
-      title: "부회장", 
+      title: "부회장",
       info: "(3학년, 컴퓨터공학전공)",
       desc: (
         <>
-          안녕하세요, i-Keeper 부회장 김시은입니다.<br/>
-          인공지능에 관심있으신 분,,데이터 분석에 관심있으신 분 연락주세요<br/>
+          안녕하세요, i-Keeper 부회장 김시은입니다.<br />
+          인공지능에 관심있으신 분,,데이터 분석에 관심있으신 분 연락주세요<br />
           dil 연구실 소속. 항시대기중.
         </>
       ),
@@ -51,7 +51,7 @@ export default function SiteAbout() {
     },
     {
       name: "이시언",
-      title: "써트장", 
+      title: "써트장",
       info: "(3학년, 컴퓨터공학전공)",
       desc: (
         <>
@@ -63,18 +63,18 @@ export default function SiteAbout() {
     },
     {
       name: "권구준",
-      title: "써트부장", 
+      title: "써트부장",
       info: "(2학년, 사이버보안전공)",
       desc: (
         <>
-          
+
         </>
       ),
       img: "/img/racoon.png",
     },
     {
       name: "이대근",
-      title: "교육부장", 
+      title: "교육부장",
       info: "(2학년, 컴퓨터공학전공)",
       desc: (
         <>
@@ -85,22 +85,22 @@ export default function SiteAbout() {
     },
     {
       name: "남우석",
-      title: "장비부장", 
+      title: "장비부장",
       info: "(2학년, 사이버보안전공)",
       desc: (
         <>
-          
+
         </>
       ),
       img: "/img/racoon.png",
     },
     {
       name: "이사윤",
-      title: "총무", 
+      title: "총무",
       info: "(2학년, 컴퓨터공학전공)",
       desc: (
         <>
-          
+
         </>
       ),
       img: "/img/racoon.png",
@@ -142,19 +142,17 @@ export default function SiteAbout() {
 
       {/* 한국어: 지도 + 주소 / English: Map + Address */}
       <div className={styles.mapSection}>
-        {/* 한국어: 카카오맵 컴포넌트 / English: Kakao Map component */}
-        <KakaoMap lat={35.913655} lng={128.802581} level={3} />
+        <div className={styles.mapContainer}>
+          <KakaoMap lat={35.913655} lng={128.802581} level={3} />
+        </div>
+
         <div className={styles.address}>
           <h4>i-Keeper</h4>
           <p>경북 경산시 하양읍 하양로 13-13</p>
           <p>대구가톨릭대학교 공학관 D2-509</p>
-          {/* 한국어: 아래의 점(.)은 공간 확보용 / English: The dots (.) below are just placeholders for spacing */}
-          <p>.</p><br />
-          <p>.</p><br />
-          <p>.</p><br />
-          <p>.</p><br />
         </div>
       </div>
+
     </section>
   );
 }
