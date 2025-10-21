@@ -20,3 +20,16 @@
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
+
+/* 스크롤바 완전히 숨기기 (모든 브라우저 대응) */
+html, body {
+  overflow: -moz-scrollbars-none; /* Firefox old */
+  -ms-overflow-style: none;       /* IE, Edge */
+  scrollbar-width: none;          /* Firefox */
+}
+
+/* Chrome, Safari, Edge (WebKit 기반) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
