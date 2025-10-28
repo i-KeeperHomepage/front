@@ -1,16 +1,13 @@
 // ==============================
-// ClubCalendar.tsx (월 전용 동아리 일정 캘린더, 백엔드 연동 버전)
+// ClubCalendar.tsx
 // ==============================
 //
 // 한국어 설명:
-// 이 컴포넌트는 FullCalendar를 사용해 동아리의 일정(세미나, 스터디, 행사 등)을 월간 달력으로 표시합니다.
-// props로 일정 데이터를 받지 않고, 백엔드 API(`/api/events`)로부터 데이터를 자동으로 불러옵니다.
-// 또한 공공데이터포털 공휴일 API를 연동하여 공휴일을 표시합니다.
+// FullCalendar 기반 월간 동아리 일정 + 공공데이터포털 공휴일 표시 (Vite + Proxy 버전)
 //
 // English Explanation:
-// Displays club schedules (seminars, study sessions, events, etc.) using FullCalendar in month view.
-// Events are fetched from the backend API (`/api/events`) automatically.
-// Also fetches public holidays via the Korean Open API.
+// FullCalendar-based monthly club calendar with Korean public holidays via Open API.
+//
 
 import { useEffect, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
@@ -21,9 +18,6 @@ import koLocale from "@fullcalendar/core/locales/ko";
 import styles from "./ClubCalendar.module.css";
 import Loading from "../common/Loading";
 
-// ==============================
-// 일정(Event) 타입 정의 / Define Event type
-// ==============================
 interface ClubEvent {
   id: number;
   title: string;
@@ -31,40 +25,28 @@ interface ClubEvent {
   endDate?: string;
 }
 
-// ==============================
-// 공휴일 타입 정의 / Define Holiday type
-// ==============================
 interface HolidayItem {
   locdate: number;
   dateName: string;
   isHoliday: string;
 }
 
-// ==============================
-// 날짜 포맷 함수
-// ==============================
+// YYYYMMDD → YYYY-MM-DD 변환
 function formatLocdate(locdate: string) {
   return `${locdate.slice(0, 4)}-${locdate.slice(4, 6)}-${locdate.slice(6, 8)}`;
 }
 
-// ==============================
-// 공휴일 가져오기 함수
-// ==============================
+// 공휴일 API 요청 함수 (프록시 경유)
 async function fetchHolidays(year: number): Promise<Record<string, string>> {
-  const serviceKey = "여기에_발급받은_serviceKey"; // 실제 발급받은 API 키 입력 필요
-  const url = `https://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo?serviceKey=${encodeURIComponent(
-    serviceKey
-  )}&solYear=${year}&numOfRows=100&pageNo=1&_type=json`;
+  const key = import.meta.env.VITE_HOLIDAY_API_KEY;
+  const url = `/openapi/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=${key}&solYear=${year}&numOfRows=100&_type=json`;
 
   try {
     const resp = await fetch(url);
+    if (!resp.ok) throw new Error("공휴일 API 요청 실패");
     const json = await resp.json();
 
-    const items = json.response?.body?.items?.item as
-      | HolidayItem[]
-      | HolidayItem
-      | undefined;
-
+    const items = json.response?.body?.items?.item as HolidayItem[] | HolidayItem | undefined;
     if (!items) return {};
 
     const list = Array.isArray(items) ? items : [items];
@@ -83,55 +65,48 @@ async function fetchHolidays(year: number): Promise<Record<string, string>> {
   }
 }
 
-// ==============================
-// ClubCalendar 컴포넌트
-// ==============================
 export default function ClubCalendar() {
   const [clubEvents, setClubEvents] = useState<ClubEvent[]>([]);
   const [holidays, setHolidays] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // 백엔드에서 일정 불러오기
   useEffect(() => {
-    async function fetchEvents() {
+    async function loadData() {
       try {
         const res = await fetch("/api/events");
         if (!res.ok) throw new Error("일정 데이터를 불러오지 못했습니다.");
-
         const data = await res.json();
 
-        // 백엔드 데이터를 ClubEvent 형식으로 매핑
         const mapped: ClubEvent[] = (data.events || []).map((e: any) => ({
           id: e.id,
           title: e.title,
           startDate: e.startDate,
           endDate: e.endDate ?? undefined,
         }));
-
         setClubEvents(mapped);
-      } catch (err) {
-        console.error("동아리 일정 불러오기 실패:", err);
+
+        const year = new Date().getFullYear();
+        const holidayData = await fetchHolidays(year);
+        setHolidays(holidayData);
+      } catch (err: any) {
+        console.error("데이터 로드 실패:", err);
+        setError(err.message);
       } finally {
         setLoading(false);
       }
     }
 
-    fetchEvents();
-
-    // 공휴일도 같이 불러오기
-    const year = new Date().getFullYear();
-    fetchHolidays(year).then(setHolidays);
+    loadData();
   }, []);
 
-  // 이벤트 데이터 매핑
-  const mappedEvents: EventInput[] = clubEvents.map((e) => ({
+  const clubEventInputs: EventInput[] = clubEvents.map((e) => ({
     title: e.title,
     start: e.startDate,
     end: e.endDate ?? undefined,
   }));
 
-  // 공휴일 이벤트 매핑
-  const holidayEvents: EventInput[] = Object.entries(holidays).map(([date, name]) => ({
+  const holidayEventInputs: EventInput[] = Object.entries(holidays).map(([date, name]) => ({
     title: name,
     start: date,
     allDay: true,
@@ -139,7 +114,6 @@ export default function ClubCalendar() {
     display: "auto",
   }));
 
-  // 공휴일 날짜 스타일 적용
   useEffect(() => {
     const dayCells = document.querySelectorAll(".fc-daygrid-day");
     dayCells.forEach((cell) => {
@@ -151,7 +125,17 @@ export default function ClubCalendar() {
     });
   }, [holidays]);
 
-  if (loading) return <Loading message="일정 불러오는 중..."/>;
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return (
+      <div className={styles.calendarWrap}>
+        <p style={{ color: "red" }}>데이터 로드 중 오류 발생: {error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.calendarWrap}>
@@ -168,7 +152,7 @@ export default function ClubCalendar() {
         height="auto"
         firstDay={0}
         dayHeaderFormat={{ weekday: "short" }}
-        events={[...mappedEvents, ...holidayEvents]}
+        events={[...clubEventInputs, ...holidayEventInputs]}
         dateClick={(info) => console.log("dateClick:", info.dateStr)}
         eventClick={(info) => console.log("eventClick:", info.event.title)}
         eventContent={(arg) => {
@@ -178,6 +162,16 @@ export default function ClubCalendar() {
           return <span>{arg.event.title}</span>;
         }}
       />
+
+      <style>{`
+        .holiday-event {
+          color: red !important;
+          font-weight: 600;
+        }
+        .is-holiday {
+          background-color: #fff1f1 !important;
+        }
+      `}</style>
     </div>
   );
 }
