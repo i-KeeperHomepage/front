@@ -75,8 +75,8 @@
 /* ============================= */
 .mapSection {
   display: flex;
-  flex-direction: row;       /* ✅ 가로 정렬 고정 */
-  flex-wrap: nowrap;         /* ✅ 줄바꿈 금지 */
+  flex-direction: row;       /* 가로 정렬 고정 */
+  flex-wrap: nowrap;         /* 줄바꿈 금지 */
   align-items: stretch;      /* 높이 동일 */
   justify-content: center;
   gap: 20px;
@@ -87,7 +87,7 @@
 
 /* 지도 영역 */
 .mapContainer {
-  flex: 0 1 60%;             /* ✅ 지도 영역 60% */
+  flex: 0 1 60%;             /* 지도 영역 60% */
   height: 450px;
   min-width: 500px;
   display: flex;
@@ -95,7 +95,7 @@
 
 /* 주소 영역 */
 .address {
-  flex: 0 1 40%;             /* ✅ 주소 영역 40% */
+  flex: 0 1 40%;             /* 주소 영역 40% */
   background-color: #000;
   border-radius: 12px;
   padding: 32px;

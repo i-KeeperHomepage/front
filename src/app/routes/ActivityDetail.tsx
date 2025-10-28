@@ -48,7 +48,7 @@ export default function ActivityDetail() {
     // English: Fetch post details from backend
     async function fetchPost() {
       try {
-        // ✅ API_GUIDE 기준: GET /api/posts/{postId}
+        // API_GUIDE 기준: GET /api/posts/{postId}
         const res = await fetch(`/api/posts/${id}`, { credentials: "include" });
         if (!res.ok) {
           throw new Error("서버 응답 실패");
