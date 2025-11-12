@@ -24,10 +24,10 @@
 // 3. Display user-authored posts (category, title, created date)
 // 4. On backend integration, fetch("/api/users/me") and fetch("/api/users/me/posts") to retrieve real data
 
+import Loading from "@/components/common/Loading";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./MyPage.module.css";
-import Loading from "@/components/common/Loading";
 
 // 한국어: 사용자 프로필 타입 정의
 // English: Define user profile type
@@ -69,18 +69,21 @@ export default function MyPage() {
     async function fetchMyPage() {
       try {
         // 사용자 정보 가져오기
-        const userRes = await fetch("/api/users/me", {
+        const userRes = await fetch("http://localhost:3000/api/users/me", {
           credentials: "include",
-          headers: { Authorization: `Bearer ${token}` },
         });
+        console.log("d");
         if (!userRes.ok) throw new Error("사용자 정보 불러오기 실패");
         const userData = await userRes.json();
 
         // 사용자 게시글 가져오기
-        const postRes = await fetch("/api/users/me/posts", {
-          credentials: "include",
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const postRes = await fetch(
+          "http://localhost:3000/api/users/me/posts",
+          {
+            credentials: "include",
+            //headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         if (!postRes.ok) throw new Error("게시글 불러오기 실패");
         const postData = await postRes.json();
 
@@ -128,15 +131,36 @@ export default function MyPage() {
       <h3 className={styles.subTitle}>회원 정보</h3>
       <table className={styles.infoTable}>
         <tbody>
-          <tr><th>이름</th><td>{user.name}</td></tr>
-          <tr><th>학번</th><td>{user.studentId}</td></tr>
-          <tr><th>전공</th><td>{user.major}</td></tr>
-          <tr><th>이메일</th><td>{user.email}</td></tr>
-          <tr><th>학년/학차</th><td>{user.year}</td></tr>
+          <tr>
+            <th>이름</th>
+            <td>{user.name}</td>
+          </tr>
+          <tr>
+            <th>학번</th>
+            <td>{user.studentId}</td>
+          </tr>
+          <tr>
+            <th>전공</th>
+            <td>{user.major}</td>
+          </tr>
+          <tr>
+            <th>이메일</th>
+            <td>{user.email}</td>
+          </tr>
+          <tr>
+            <th>학년/학차</th>
+            <td>{user.year}</td>
+          </tr>
           {user.fileUrl && (
             <tr>
               <th>사인 파일</th>
-              <td><img src={user.fileUrl} alt="사인 이미지" className={styles.signImg} /></td>
+              <td>
+                <img
+                  src={user.fileUrl}
+                  alt="사인 이미지"
+                  className={styles.signImg}
+                />
+              </td>
             </tr>
           )}
         </tbody>

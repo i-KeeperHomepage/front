@@ -26,12 +26,11 @@
 // 4. Show write button only if role === "officer"
 // 5. For backend integration, uncomment fetch("/api/posts") logic
 
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import PostTable from "@/components/postable/PostTable";
-import type { PostRow } from "@/components/postable/PostTable";
-import { Outlet } from "react-router-dom";
 import Loading from "@/components/common/Loading";
+import type { PostRow } from "@/components/postable/PostTable";
+import PostTable from "@/components/postable/PostTable";
+import { useEffect, useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 
 interface Post {
   id: number;
@@ -66,9 +65,12 @@ export default function Notice() {
         setLoading(true);
         setError(null);
 
-        const res = await fetch(`/api/posts?page=${currentPage}&limit=${PAGE_LIMIT}`, {
-          credentials: "include",
-        });
+        const res = await fetch(
+          `http://localhost:3000/api/posts?page=${currentPage}&limit=${PAGE_LIMIT}`,
+          {
+            credentials: "include",
+          }
+        );
         if (!res.ok) throw new Error("게시글 요청 실패");
 
         const data = await res.json();
