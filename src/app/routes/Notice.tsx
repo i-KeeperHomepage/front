@@ -65,12 +65,9 @@ export default function Notice() {
         setLoading(true);
         setError(null);
 
-        const res = await fetch(
-          `http://localhost:3000/api/posts?page=${currentPage}&limit=${PAGE_LIMIT}`,
-          {
-            credentials: "include",
-          }
-        );
+        const res = await fetch(`/api/posts?categorId=1&page=${currentPage}&limit=${PAGE_LIMIT}`, {
+          credentials: "include",
+        });
         if (!res.ok) throw new Error("게시글 요청 실패");
 
         const data = await res.json();

@@ -29,9 +29,6 @@ interface Post {
 
 const PAGE_LIMIT = 5;
 
-// 실제 categoryId는 API 가이드에서 1:1 문의에 해당하는 ID로 교체해야 함
-const SUPPORT_CATEGORY_ID = 6;
-
 export default function Support() {
   // 목록 원본 상태
   const [posts, setPosts] = useState<Post[]>([]);
@@ -50,7 +47,7 @@ export default function Support() {
 
         // categoryId 기반 요청 (API 가이드 기준)
         const res = await fetch(
-          `/api/posts?categoryId=${SUPPORT_CATEGORY_ID}&page=${currentPage}&limit=${PAGE_LIMIT}`,
+          `/api/posts?categoryId=6&page=${currentPage}&limit=${PAGE_LIMIT}`,
           { credentials: "include" }
         );
         if (!res.ok) throw new Error("서버 응답 실패");

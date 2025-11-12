@@ -92,9 +92,9 @@ export default function Reference() {
     async function loadAll() {
       setLoading(true);
       const [keeper, seminar, special] = await Promise.all([
-        fetchCategoryPosts(1, "Keeper 세미나", keeperSeminarPage),
-        fetchCategoryPosts(2, "정보공유세미나", seminarPage),
-        fetchCategoryPosts(3, "특강", specialPage),
+        fetchCategoryPosts(3, "Keeper 세미나", keeperSeminarPage),
+        fetchCategoryPosts(4, "정보공유세미나", seminarPage),
+        fetchCategoryPosts(5, "특강", specialPage),
       ]);
 
       setKeeperSeminarPosts(keeper.posts);

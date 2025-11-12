@@ -46,7 +46,7 @@ export default function Activities() {
         setLoading(true);
 
         // API 가이드 기준: GET /api/posts?page=&limit=
-        const res = await fetch(`/api/posts?page=${currentPage}&limit=${PAGE_LIMIT}`, {
+        const res = await fetch(`/api/posts?categoryId=2&page=${currentPage}&limit=${PAGE_LIMIT}`, {
           credentials: "include",
         });
         if (!res.ok) throw new Error("Failed to fetch posts");
