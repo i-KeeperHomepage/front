@@ -26,12 +26,11 @@
 // 4. Show write button only if role === "officer"
 // 5. For backend integration, uncomment fetch("/api/posts") logic
 
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import PostTable from "@/components/postable/PostTable";
-import type { PostRow } from "@/components/postable/PostTable";
-import { Outlet } from "react-router-dom";
 import Loading from "@/components/common/Loading";
+import type { PostRow } from "@/components/postable/PostTable";
+import PostTable from "@/components/postable/PostTable";
+import { useEffect, useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 
 interface Post {
   id: number;

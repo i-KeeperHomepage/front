@@ -9,14 +9,14 @@
 // FullCalendar-based monthly club calendar with Korean public holidays via Open API.
 //
 
-import { useEffect, useState } from "react";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction";
 import type { EventInput } from "@fullcalendar/core";
 import koLocale from "@fullcalendar/core/locales/ko";
-import styles from "./ClubCalendar.module.css";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import FullCalendar from "@fullcalendar/react";
+import { useEffect, useState } from "react";
 import Loading from "../common/Loading";
+import styles from "./ClubCalendar.module.css";
 
 interface ClubEvent {
   id: number;
@@ -46,7 +46,10 @@ async function fetchHolidays(year: number): Promise<Record<string, string>> {
     if (!resp.ok) throw new Error("공휴일 API 요청 실패");
     const json = await resp.json();
 
-    const items = json.response?.body?.items?.item as HolidayItem[] | HolidayItem | undefined;
+    const items = json.response?.body?.items?.item as
+      | HolidayItem[]
+      | HolidayItem
+      | undefined;
     if (!items) return {};
 
     const list = Array.isArray(items) ? items : [items];
@@ -74,7 +77,7 @@ export default function ClubCalendar() {
   useEffect(() => {
     async function loadData() {
       try {
-        const res = await fetch("/api/events");
+        const res = await fetch("http://localhost:3000/api/events");
         if (!res.ok) throw new Error("일정 데이터를 불러오지 못했습니다.");
         const data = await res.json();
 
@@ -106,13 +109,15 @@ export default function ClubCalendar() {
     end: e.endDate ?? undefined,
   }));
 
-  const holidayEventInputs: EventInput[] = Object.entries(holidays).map(([date, name]) => ({
-    title: name,
-    start: date,
-    allDay: true,
-    className: "holiday-event",
-    display: "auto",
-  }));
+  const holidayEventInputs: EventInput[] = Object.entries(holidays).map(
+    ([date, name]) => ({
+      title: name,
+      start: date,
+      allDay: true,
+      className: "holiday-event",
+      display: "auto",
+    })
+  );
 
   useEffect(() => {
     const dayCells = document.querySelectorAll(".fc-daygrid-day");

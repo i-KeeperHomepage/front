@@ -32,10 +32,10 @@
 // - 응답: { message, user, accessToken }
 // - 성공 시: accessToken, role(localStorage 저장), login 이벤트 발행
 
+import { loginApi } from "@/api/api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Auth.module.css";
-import { loginApi } from "@/api/api";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -67,7 +67,10 @@ export default function Login() {
     // 데모 계정:
     // - officer@officer.com / officer  -> role: "officer"
     // - user@user.com / user           -> role: "member"
-    if (formData.email === "officer@officer.com" && formData.password === "officer") {
+    if (
+      formData.email === "officer@officer.com" &&
+      formData.password === "officer"
+    ) {
       localStorage.setItem("token", "test-officer-token");
       localStorage.setItem("role", "officer");
       window.dispatchEvent(new Event("login"));
@@ -79,6 +82,7 @@ export default function Login() {
     try {
       const data = await loginApi(formData.email, formData.password);
       // accessToken/role 저장
+      cookieStore.set("token", data.accessToken || "");
       localStorage.setItem("token", data.accessToken || "");
       localStorage.setItem("role", data.user?.role || "member");
       window.dispatchEvent(new Event("login"));
