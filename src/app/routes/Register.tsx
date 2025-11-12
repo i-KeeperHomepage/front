@@ -63,7 +63,7 @@ export default function Register() {
     if (!formData.email) return alert("이메일을 입력해주세요.");
 
     try {
-      const res = await fetch("/api/send-auth-code", {
+      const res = await fetch("/api/auth/send-verification-code", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: formData.email }),
@@ -81,7 +81,7 @@ export default function Register() {
   // 인증 코드 확인
   const verifyCode = async () => {
     try {
-      const res = await fetch("/api/verify-auth-code", {
+      const res = await fetch("/api/auth/verify-code", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: formData.email, code: authCode }),

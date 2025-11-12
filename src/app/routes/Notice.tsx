@@ -137,6 +137,7 @@ export default function Notice() {
         // English: Only show write button for officer role
         showWriteButton={role === "officer"}
         error={error}
+        emptyMessage="등록된 공지사항이 없습니다."
       />
       <Outlet />
     </section>
