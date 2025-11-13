@@ -12,11 +12,11 @@
 // English:
 // Home page with hero, calendar, and notice preview.
 
-import { useEffect, useState } from "react";
 import ClubCalendar from "@/components/calendar/ClubCalendar";
-import PostTable from "@/components/postable/PostTable";
-import type { PostRow } from "@/components/postable/PostTable";
 import Loading from "@/components/common/Loading";
+import type { PostRow } from "@/components/postable/PostTable";
+import PostTable from "@/components/postable/PostTable";
+import { useEffect, useState } from "react";
 import styles from "./SiteHome.module.css";
 
 const PAGE_LIMIT = 5;
@@ -36,13 +36,15 @@ export default function SiteHome() {
         setLoading(true);
         setError(null);
 
-        const res = await fetch(`/api/posts?category=notice&page=${currentPage}&limit=${PAGE_LIMIT}`);
+        const res = await fetch(
+          `/api/posts?category=notice&page=${currentPage}&limit=${PAGE_LIMIT}`
+        );
         if (!res.ok) throw new Error("공지 데이터를 불러오지 못했습니다.");
 
         const data = await res.json();
         const items = Array.isArray(data.items) ? data.items : data;
 
-        const mapped: PostRow[] = items.map((p: any) => ({
+        const mapped: PostRow[] = items.posts.map((p: any) => ({
           id: p.id,
           category: p.category?.name ?? "공지",
           title: p.title ?? "제목 없음",
@@ -55,7 +57,9 @@ export default function SiteHome() {
         setPosts(mapped);
 
         const headerCount = res.headers.get("X-Total-Count");
-        const totalCount = headerCount ? Number(headerCount) : Number(data.totalCount ?? 0);
+        const totalCount = headerCount
+          ? Number(headerCount)
+          : Number(data.totalCount ?? 0);
         const pages =
           totalCount > 0
             ? Math.max(1, Math.ceil(totalCount / PAGE_LIMIT))
@@ -80,7 +84,8 @@ export default function SiteHome() {
           소프트웨어 개발 & 보안 동아리 'i-Keeper'는 2002년에 설립되어,
           대구가톨릭대학교 소프트웨어융합대학 소속으로 활동하고 있습니다.
           <br />
-          다양한 프로젝트, 세미나, 멘토링을 통해 함께 배우고 성장하는 개발자 커뮤니티입니다.
+          다양한 프로젝트, 세미나, 멘토링을 통해 함께 배우고 성장하는 개발자
+          커뮤니티입니다.
         </p>
       </div>
 

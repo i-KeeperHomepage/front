@@ -6,7 +6,7 @@
 // - 필요 시 Base URL만 여기서 교체하면 전체가 반영됨.
 //
 
-export const BASE_URL = "http://localhost:3000/api"; // 프록시 사용 중이면 그대로 두세요.
+export const BASE_URL = "/api"; // 프록시 사용 중이면 그대로 두세요.
 
 async function jsonFetch<T>(input: string, init?: RequestInit): Promise<T> {
   const res = await fetch(input, {

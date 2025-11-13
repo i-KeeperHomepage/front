@@ -18,8 +18,8 @@
 // 2. Provide example data (to be replaced with backend data later)
 // 3. Pass columns, data, and title props to the DataTable component
 
-import { useEffect, useState } from "react";
 import DataTable from "@/components/dataTable/DataTable";
+import { useEffect, useState } from "react";
 
 export default function Cleaning() {
   // 한국어: 테이블의 컬럼 정의 (key는 데이터의 속성명, label은 테이블 헤더에 표시될 이름)
@@ -44,7 +44,7 @@ export default function Cleaning() {
       })
       .then((result) => {
         // API 응답 구조를 테이블에 맞게 매핑
-        const mapped = result.map((item: any) => ({
+        const mapped = result.cleanings.map((item: any) => ({
           date: new Date(item.date).toLocaleDateString("ko-KR"),
           userName:
             item.assignedUsers && item.assignedUsers.length > 0

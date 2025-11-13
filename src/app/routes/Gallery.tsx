@@ -18,8 +18,8 @@
 // 2. Use the map function to render multiple GalleryCard components
 // 3. Arrange the cards in a responsive grid layout (1 column, 2 columns, 3 columns)
 
-import { useEffect, useState } from "react";
 import GalleryCard from "@/components/galleryCard/GalleryCard";
+import { useEffect, useState } from "react";
 import style from "./Gallery.module.css";
 
 // 갤러리 항목 타입 정의
@@ -42,7 +42,7 @@ export default function Gallery() {
       })
       .then((result) => {
         // API 구조에 따라 파일 데이터 매핑
-        const mapped: GalleryItem[] = result
+        const mapped: GalleryItem[] = result.files
           .filter((f: any) => f.mimeType.startsWith("image/")) // 이미지 파일만
           .map((f: any) => ({
             imageUrl: `/api/files/${f.id}/download`,

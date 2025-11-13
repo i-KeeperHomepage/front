@@ -77,7 +77,7 @@ export default function ClubCalendar() {
   useEffect(() => {
     async function loadData() {
       try {
-        const res = await fetch("http://localhost:3000/api/events");
+        const res = await fetch("/api/events");
         if (!res.ok) throw new Error("일정 데이터를 불러오지 못했습니다.");
         const data = await res.json();
 

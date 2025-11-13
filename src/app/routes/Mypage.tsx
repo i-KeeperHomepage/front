@@ -69,21 +69,16 @@ export default function MyPage() {
     async function fetchMyPage() {
       try {
         // 사용자 정보 가져오기
-        const userRes = await fetch("http://localhost:3000/api/users/me", {
+        const userRes = await fetch("/api/users/me", {
           credentials: "include",
         });
-        console.log("d");
         if (!userRes.ok) throw new Error("사용자 정보 불러오기 실패");
         const userData = await userRes.json();
 
         // 사용자 게시글 가져오기
-        const postRes = await fetch(
-          "http://localhost:3000/api/users/me/posts",
-          {
-            credentials: "include",
-            //headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const postRes = await fetch(`/api/posts?authorId=${userData.id}`, {
+          credentials: "include",
+        });
         if (!postRes.ok) throw new Error("게시글 불러오기 실패");
         const postData = await postRes.json();
 
@@ -98,8 +93,8 @@ export default function MyPage() {
           fileUrl: userData.signatureFile?.url || "",
         };
 
-        const mappedPosts: UserPost[] = Array.isArray(postData)
-          ? postData.map((p: any) => ({
+        const mappedPosts: UserPost[] = Array.isArray(postData.posts)
+          ? postData.posts.map((p: any) => ({
               id: p.id,
               category: p.category?.name || "기타",
               title: p.title || "제목 없음",
