@@ -35,6 +35,7 @@
 import { loginApi } from "@/api/api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 import styles from "./Auth.module.css";
 
 export default function Login() {
@@ -82,7 +83,9 @@ export default function Login() {
     try {
       const data = await loginApi(formData.email, formData.password);
       // accessToken/role 저장
-      cookieStore.set("token", data.accessToken || "");
+      //await cookieStore.set("token", data.accessToken || "");
+      
+      Cookies.set("token", data.accessToken || "");
       localStorage.setItem("token", data.accessToken || "");
       localStorage.setItem("role", data.user?.role || "member");
       window.dispatchEvent(new Event("login"));

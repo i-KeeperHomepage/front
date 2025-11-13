@@ -21,6 +21,7 @@
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "fullcalendar": "^6.1.19",
+    "js-cookie": "^3.0.5",
     "lucide-react": "^0.544.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
@@ -33,6 +34,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.35.0",
+    "@types/js-cookie": "^3.0.6",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react-swc": "^4.0.1",
