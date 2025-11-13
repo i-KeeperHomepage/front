@@ -37,7 +37,7 @@ export default function SiteHome() {
         setError(null);
 
         const res = await fetch(
-          `/api/posts?category=notice&page=${currentPage}&limit=${PAGE_LIMIT}`
+          `/api/posts?categoryId=1&page=${currentPage}&limit=${PAGE_LIMIT}`
         );
         if (!res.ok) throw new Error("공지 데이터를 불러오지 못했습니다.");
 
